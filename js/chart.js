@@ -6,28 +6,20 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   var localEvents = [];
   var localOptions = {};
-  var dimensions;
+  var dimensions = null;
+  var width = null;
+  var height = null;
+  var svg = null;
+
   var baseChart = new BaseChart($chartNode, localOptions, localEvents);
-  baseChart.setOptions(customOptions);
   baseChart.visualize = visualize;
+  baseChart.setOptions(customOptions);
+  baseChart.on('chartResize', onResize);
 
-  var margin = {top: 20, right: 60, bottom: 50, left: 50};
-  var svg;
-  var x = d3.time.scale();
+  var margin = {top: 0, right: 0, bottom: 0, left: 0};
+  // var margin = {top: 20, right: 60, bottom: 50, left: 50};
+  var x = d3.scale.linear();
   var y = d3.scale.linear();
-  var xAxis = d3.svg.axis()
-    .scale(x)
-    .tickFormat(d3.time.format("%b %e"))
-    .ticks(5)
-    .orient("bottom");
-  var yAxis = d3.svg.axis()
-    .scale(y)
-    .ticks(6)
-    .orient("left");
-
-  var tempLine = d3.svg.line()
-    .x(function(d) { return x(d.date);})
-    .y(function(d) { return y(d.temperature);});
 
   function initialize() {
     baseChart.initialize();
@@ -37,46 +29,39 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (dimensions.height - margin.bottom) + ")")
-      .call(xAxis);
+    svg.append('circle')
+      .style('fill', 'red');
 
-    svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
-
-    svg.append("path")
-      .classed("temperature", true);
+    visualize();
   }
 
-  function setNest(nest) {
-    x.domain(d3.extent(nest.records, function(d) { return d.date; }));
-    y.domain(d3.extent(nest.records, function(d) { return d.temperature; }));
-
-    d3.select("path.temperature")
-      .datum(nest.records)
-      .attr("d", tempLine);
-
-    d3.select(".y.axis")
-      .call(yAxis);
-    d3.select(".x.axis")
-      .call(xAxis);
+  function setData(data) {
+    // x.domain(d3.extent(data.records, function(d) { return d.date; }));
+    // y.domain(d3.extent(data.records, function(d) { return d.temperature; }));
   }
 
   function onResize(_dimensions) {
     dimensions = _dimensions;
+    width = dimensions.width - (margin.left + margin.right);
+    height = dimensions.height - (margin.top + margin.bottom);
     x.range([0, dimensions.width - margin.right]);
     y.range([dimensions.height - margin.bottom, 0]);
   }
 
   function visualize() {
+    if (!svg) return;
+
+    svg.select('circle')
+      .attr('cx', width / 2)
+      .attr('cy', height / 2)
+      .attr('r', height / 2);
   }
+
 
   // exports
 
   var exports = {
-    setNest: setNest
+    setData: setData
   };
 
   initialize();
