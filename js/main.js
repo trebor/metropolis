@@ -46,7 +46,9 @@ define(['jquery', 'chart'], function ($, Chart) {
   var chart = new Chart($('.chart'));
 
   var data = genData();
-  console.log("data", data);
+  // console.log("data", data);
+
+  chart.setData(data['San Francisco'].light);
 
   function genData(){
     var data = {};

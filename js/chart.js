@@ -16,10 +16,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 0, right: 0, bottom: 0, left: 0};
-  // var margin = {top: 20, right: 60, bottom: 50, left: 50};
-  var x = d3.scale.linear();
-  var y = d3.scale.linear();
+  var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  var x = d3.scale.ordinal().domain(d3.range(DAYS));
+  var y = d3.scale.ordinal().domain(d3.range(HOURS));
+  var color = d3.scale.linear().range(["red", "white"]);
 
   function initialize() {
     baseChart.initialize();
@@ -29,34 +29,55 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('circle')
-      .style('fill', 'red');
-
     visualize();
   }
 
   function setData(data) {
-    // x.domain(d3.extent(data.records, function(d) { return d.date; }));
-    // y.domain(d3.extent(data.records, function(d) { return d.temperature; }));
+    data = data.map(function(d, i) {
+      var day = Math.floor(i / HOURS);
+      var hour = i % HOURS;
+      // console.log("day, hour", day, hour);
+      return {day: day, hour: hour, value: d};
+    });
+    color.domain(d3.extent(data, function(d) {return d.value;}));
+
+    var updates = svg.selectAll('rect.hour')
+      .data(data, datumId);
+
+    updates
+      .enter()
+      .append('rect')
+      .classed('hour', true);
+
+    updates
+      .exit()
+      .remove();
+
+    visualize();
+  }
+
+  function datumId(d) {
+    return d.day * 100 + d.hour;
   }
 
   function onResize(_dimensions) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
-    x.range([0, dimensions.width - margin.right]);
-    y.range([dimensions.height - margin.bottom, 0]);
+    x.rangeBands([0, width] , 0.3);
+    y.rangeBands([height, 0], 0.3);
   }
 
   function visualize() {
     if (!svg) return;
 
-    svg.select('circle')
-      .attr('cx', width / 2)
-      .attr('cy', height / 2)
-      .attr('r', height / 2);
+    svg.selectAll('rect.hour')
+      .attr('x', function(d) {return x(d.day);})
+      .attr('y', function(d) {return y(d.hour);})
+      .attr('width', function(d) {return x.rangeBand();})
+      .attr('height', function(d) {return y.rangeBand();})
+      .attr('fill', function(d) {return color(d.value);});
   }
-
 
   // exports
 
