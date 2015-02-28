@@ -1,0 +1,33 @@
+{
+  "name": "metropolis",
+  "version": "0.0.0",
+  "homepage": "http://treboresque.github.io/metropolis/",
+  "authors": [
+    "Eric Swedburg",
+    "Nathan Chan",
+    "Robert Harris"
+  ],
+  "description": "metropolis viz",
+  "main": "js/main.js",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "metropolis",
+    "d3",
+    "conservation"
+  ],
+  "license": "CC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.4.11",
+    "requirejs": "~2.1.14",
+    "jquery": "~2.1.1"
+  }
+}
