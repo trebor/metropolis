@@ -38,7 +38,7 @@ var SENSORS = [
   'dust',
 ];
 
-var DAYS = 28;
+var DAYS = 7;
 var HOURS = 24;
 
 define(['jquery', 'chart'], function ($, Chart) {

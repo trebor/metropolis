@@ -10,6 +10,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var width = null;
   var height = null;
   var svg = null;
+  var days = null;
 
   var baseChart = new BaseChart($chartNode, localOptions, localEvents);
   baseChart.visualize = visualize;
@@ -17,7 +18,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.on('chartResize', onResize);
 
   var margin = {top: 20, right: 20, bottom: 20, left: 20};
-  var x = d3.scale.ordinal().domain(d3.range(DAYS));
+  var x = d3.scale.ordinal();
   var y = d3.scale.ordinal().domain(d3.range(HOURS));
   var color = d3.scale.linear().range(["red", "white"]);
 
@@ -33,6 +34,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
   }
 
   function setData(data) {
+
+    days = Math.floor(data.length / HOURS);
+    x.domain(d3.range(days));
+
     data = data.map(function(d, i) {
       var day = Math.floor(i / HOURS);
       var hour = i % HOURS;
@@ -64,8 +69,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
-    x.rangeBands([0, width] , 0.3);
-    y.rangeBands([height, 0], 0.3);
+    x.rangeRoundBands([0, width] , 0.1);
+    y.rangeRoundBands([height, 0], 0.1);
   }
 
   function visualize() {
