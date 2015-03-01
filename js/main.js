@@ -48,7 +48,18 @@ define(['jquery', 'chart'], function ($, Chart) {
   var data = genData();
   // console.log("data", data);
 
-  chart.setData(data['San Francisco'].light);
+  d3.csv('data/small_data.txt', gotData)
+    .row(function(d) {
+      d.airquality_raw = +d.airquality_raw;
+      d.date = new Date(d.timestamp);
+      return d;
+    });
+
+  function gotData(data) {
+    chart.setData(data.slice(0, DAYS * HOURS));
+  }
+
+  // chart.setData(data['San Francisco'].light);
 
   function genData(){
     var data = {};

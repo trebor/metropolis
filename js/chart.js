@@ -37,7 +37,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
       var day = Math.floor(i / HOURS);
       var hour = i % HOURS;
       // console.log("day, hour", day, hour);
-      return {day: day, hour: hour, value: d};
+      return {day: day, hour: hour, value: d.airquality_raw};
     });
     color.domain(d3.extent(data, function(d) {return d.value;}));
 
