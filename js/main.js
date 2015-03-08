@@ -25,6 +25,6 @@ define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
     .on('data', gotData);
 
   function gotData(data) {
-    chart.setData(data.slice(0, DAYS * HOURS));
+    chart.setData(data.slice(0, 40 * HOURS));
   }
 });
