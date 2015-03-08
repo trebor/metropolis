@@ -41,9 +41,9 @@ var module = function($chartNode, customOptions, extendedEvents) {
     data = data.map(function(d, i) {
       var day = Math.floor(i / HOURS);
       var hour = i % HOURS;
-      // console.log("day, hour", day, hour);
-      return {day: day, hour: hour, value: d.airquality_raw};
+      return {day: day, hour: hour, value: d.airquality_raw, date: d.date};
     });
+
     color.domain(d3.extent(data, function(d) {return d.value;}));
 
     var updates = svg.selectAll('rect.hour')
@@ -52,7 +52,11 @@ var module = function($chartNode, customOptions, extendedEvents) {
     updates
       .enter()
       .append('rect')
-      .classed('hour', true);
+      .classed('hour', true)
+      .append('title')
+      .text(function(d) {
+        return d.date;
+      });
 
     updates
       .exit()
@@ -70,7 +74,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
     x.rangeRoundBands([0, width] , 0.1);
-    y.rangeRoundBands([height, 0], 0.1);
+    y.rangeRoundBands([0, height], 0.1);
   }
 
   function visualize() {
