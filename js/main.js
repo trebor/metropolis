@@ -12,6 +12,7 @@ requirejs.config({
     // local code
 
     baseChart: '../js/basechart',
+    heatMap:   '../js/heatmap',
     model:     '../js/model',
     chart:     '../js/chart'
   },
@@ -25,6 +26,6 @@ define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
     .on('data', gotData);
 
   function gotData(data) {
-    chart.setData(data.slice(0, 40 * HOURS));
+    chart.setData(data.slice(0, 7 * HOURS));
   }
 });

@@ -1,4 +1,4 @@
-define(["d3", "baseChart"], function(d3, BaseChart) {
+define(["d3", "lodash", "baseChart", "heatMap"], function(d3, _, BaseChart, HeatMap) {
 
 // base svg chart, which auto resizes to fit containing element
 
@@ -10,7 +10,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var width = null;
   var height = null;
   var svg = null;
-  var days = null;
+  var mapG1 = null;
+  var mapG2 = null;
+  var map1 = null;
+  var map2 = null;
 
   var baseChart = new BaseChart($chartNode, localOptions, localEvents);
   baseChart.visualize = visualize;
@@ -18,9 +21,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.on('chartResize', onResize);
 
   var margin = {top: 20, right: 20, bottom: 20, left: 20};
-  var x = d3.scale.ordinal();
-  var y = d3.scale.ordinal().domain(d3.range(HOURS));
-  var color = d3.scale.linear().range(["red", "white"]);
+  var days = d3.scale.ordinal();
+  var hours = d3.scale.ordinal().domain(d3.range(HOURS));
+  var color1 = d3.scale.linear().range(["red", "white"]);
+  var color2 = d3.scale.linear().range(["blue", "white"]);
 
   function initialize() {
     baseChart.initialize();
@@ -30,62 +34,53 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    mapG1 = svg.append('g');
+    mapG2 = svg.append('g');
+    map1 = new HeatMap(mapG1);
+    map2 = new HeatMap(mapG2);
+
     visualize();
   }
 
   function setData(data) {
 
-    days = Math.floor(data.length / HOURS);
-    x.domain(d3.range(days));
+    var data1 = [
+      [1, 2, 3],
+      [1, 2, 4],
+    ];
 
-    data = data.map(function(d, i) {
-      var day = Math.floor(i / HOURS);
-      var hour = i % HOURS;
-      return {day: day, hour: hour, value: d.airquality_raw, date: d.date};
-    });
+    var data2 = [
+      [3, 2, 3],
+      [3, 2, 4],
+      [3, 2, 5]
+    ];
 
-    color.domain(d3.extent(data, function(d) {return d.value;}));
+    color1.domain(d3.extent(_.flatten(data1)));
+    color2.domain(d3.extent(_.flatten(data2)));
 
-    var updates = svg.selectAll('rect.hour')
-      .data(data, datumId);
+    map1
+      .color(color1)
+      .setData(data1);
 
-    updates
-      .enter()
-      .append('rect')
-      .classed('hour', true)
-      .append('title')
-      .text(function(d) {
-        return d.date;
-      });
-
-    updates
-      .exit()
-      .remove();
-
-    visualize();
-  }
-
-  function datumId(d) {
-    return d.day * 100 + d.hour;
+    map2
+      .color(color2)
+      .setData(data2);
   }
 
   function onResize(_dimensions) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
-    x.rangeRoundBands([0, width] , 0.1);
-    y.rangeRoundBands([0, height], 0.1);
+    visualize();
   }
 
   function visualize() {
     if (!svg) return;
 
-    svg.selectAll('rect.hour')
-      .attr('x', function(d) {return x(d.day);})
-      .attr('y', function(d) {return y(d.hour);})
-      .attr('width', function(d) {return x.rangeBand();})
-      .attr('height', function(d) {return y.rangeBand();})
-      .attr('fill', function(d) {return color(d.value);});
+    mapG2.attr('transform', 'translate(0, ' + height / 2 + ')');
+
+    map1.render(width, height / 2);
+    map2.render(width, height / 2);
   }
 
   // exports
