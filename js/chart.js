@@ -61,7 +61,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
         data: cityMap[name]
       };
 
-      city.group.append('text').text(city.name);
+      city.group.append('text').classed('city-title', true).text(city.name);
       city.map.color(color);
 
       return city;
