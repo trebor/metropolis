@@ -1,3 +1,16 @@
+@font-face {
+    font-family: "myriad";
+    src: url("/css/MyriadSetPro-Thin_sub.woff") format('woff');
+}
+@font-face {
+    font-family: "heiti";
+    src: url("/css/STHeiti.woff") format('woff');
+}
+@font-face {
+    font-family: "kannada";
+    src: url("/css/KannadaSangamMN_sub.woff") format('woff');
+}
+
 body {
   width: 100%;
   height: 100%;
@@ -5,7 +18,15 @@ body {
   display: flex;
   flex-direction: column;
 }
-
+.type-title {
+    font-family: "myriad";
+}
 .chart {
   flex: 1 1 100%;
+}
+.ಬೆಂಗಳೂರು {
+ font-family: "kannada";	
+}
+.上海市 {
+ font-family: "heiti";	
 }
