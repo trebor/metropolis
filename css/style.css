@@ -20,10 +20,10 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Noto Sans';
-  color: gainsboro;
+  color: #D1D0CE;
 }
 .type-title, .city-title {
-	fill: gainsboro;
+	fill: #D1D0CE;
 }
 .chart {
   flex: 1 1 100%;
