@@ -22,7 +22,9 @@ body {
   font-family: 'Noto Sans';
   color: gainsboro;
 }
-
+.type-title {
+	color: gainsboro;
+}
 .chart {
   flex: 1 1 100%;
 }
