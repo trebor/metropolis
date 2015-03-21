@@ -23,7 +23,7 @@ body {
   color: gainsboro;
 }
 .type-title {
-	color: gainsboro;
+	fill: gainsboro;
 }
 .chart {
   flex: 1 1 100%;
