@@ -23,8 +23,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var margin = {top: 20, right: 20, bottom: 20, left: 20};
   var days = d3.scale.ordinal();
   var hours = d3.scale.ordinal().domain(d3.range(HOURS));
-  var color1 = d3.scale.linear().range(["red", "white"]);
-  var color2 = d3.scale.linear().range(["blue", "white"]);
+  var color1 = d3.scale.linear().range(["white", "red"]);
+  var color2 = d3.scale.linear().range(["white", "blue"]);
 
   function initialize() {
     baseChart.initialize();
@@ -42,11 +42,20 @@ var module = function($chartNode, customOptions, extendedEvents) {
     visualize();
   }
 
+  // var width = 6;
+  // var height = 6;
+
   function setData(data) {
 
+    console.log("data", data);
+
     var data1 = [
-      [1, 2, 3],
-      [1, 2, 4],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
     ];
 
     var data2 = [
@@ -65,6 +74,13 @@ var module = function($chartNode, customOptions, extendedEvents) {
     map2
       .color(color2)
       .setData(data2);
+
+    // setTimeout(function() {
+    //   map2.setData(data1);
+    //   console.log("mark", 1);
+    // }, 3000);
+
+    visualize();
   }
 
   function onResize(_dimensions) {
@@ -79,8 +95,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
     mapG2.attr('transform', 'translate(0, ' + height / 2 + ')');
 
-    map1.render(width, height / 2);
-    map2.render(width, height / 2);
+    map1.visualize(width, height / 2);
+    map2.visualize(width, height / 2);
   }
 
   // exports
