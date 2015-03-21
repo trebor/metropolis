@@ -1,14 +1,16 @@
 @font-face {
-    font-family: "myriad";
-    src: url("/css/MyriadSetPro-Thin_sub.woff") format('woff');
+    font-family: "myriadsetprothin";
+    src: url("file:///Users/admin/work/metropolis/css/MyriadSetPro-Thin_sub.woff") format('woff');
+	font-weight: 100;
+	font-style: normal;
 }
 @font-face {
     font-family: "heiti";
-    src: url("/css/STHeiti.woff") format('woff');
+    src: url("file:///Users/admin/work/metropolis/css/STHeiti.woff") format('woff');
 }
 @font-face {
     font-family: "kannada";
-    src: url("/css/KannadaSangamMN_sub.woff") format('woff');
+    src: url("file:///Users/admin/work/metropolis/css/KannadaSangamMN_sub.woff") format('woff');
 }
 
 body {
@@ -17,9 +19,12 @@ body {
   margin: 0px;
   display: flex;
   flex-direction: column;
+  font-family: 'Noto Sans';
 }
 .type-title {
-    font-family: "myriad";
+    font-family: "myriadsetprothin";
+	font-weight: 100;
+	font-style: normal;
 }
 .chart {
   flex: 1 1 100%;
