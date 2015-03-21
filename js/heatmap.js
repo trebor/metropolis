@@ -28,7 +28,9 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
           .data(d)
           .enter()
           .append('rect')
-          .classed('box', true);
+          .classed('box', true)
+          .attr('fill', 'white');
+
       });
 
     updateCols
@@ -64,7 +66,8 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
         if (colorFn) {
           boxes
-          .transition()
+            .transition()
+            .duration(2500)
             .attr('fill', colorFn);
         }
       });
