@@ -21,14 +21,18 @@ requirejs.config({
 });
 
 define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
-  var chart = new Chart($('.chart'));
-  var model = new Model().on('data', chart.setData);
   var currentSensorIdx = 0;
+  var chart = new Chart($('.chart'));
+  var model = new Model().on('data', function(data) {
+    chart.setData(data);
 
-  setInterval(updateFrame, 3000);
+    setInterval(updateFrame, 3000);
+    updateFrame();
 
-  function updateFrame() {
-    chart.setFrame(SENSORS[currentSensorIdx], 200);
-    currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
-  }
+    function updateFrame() {
+      chart.setFrame(SENSORS[currentSensorIdx], 240);
+      currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
+    }
+  });
+
 });

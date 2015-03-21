@@ -11,8 +11,8 @@ var CITIES = [
 ];
 
 var SENSORS = [
-  'temperature',
   'light',
+  'temperature',
   'airquality_raw',
   'sound',
   'humidity',

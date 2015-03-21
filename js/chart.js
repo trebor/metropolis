@@ -21,6 +21,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var margin = {top: 70, right: 20, bottom: 20, left: 20};
   var cityScale = d3.scale.ordinal();
   var color = d3.scale.linear().range(["white", "blue"]);
+  var colorScale = d3.scale.category10();
   var offset = 0;
 
   function initialize() {
@@ -49,7 +50,12 @@ var module = function($chartNode, customOptions, extendedEvents) {
         name: sensor
       };
     }).reduce(function(p, c) {
-      p[c.name] = c.extent;
+      p[c.name] = {
+        extent: c.extent,
+        color: d3.scale.linear()
+          .range(["white", colorScale(c.name)])
+          .domain(c.extent)
+      };
       return p;
     }, {});
 
@@ -77,10 +83,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
       return city;
     });
 
-    console.log("cities", cities);
-
-    setFrame('airquality_raw', 0);
-
     visualize();
   }
 
@@ -88,7 +90,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var COL_COUNT = 24;
 
   function setFrame(type, offset) {
-    color.domain(sensorMap[type]);
+    color = sensorMap[type].color;
     d3.select('.type-title').text(type);
     cities.forEach(function(city) {
       var rows = d3.range(ROW_COUNT).map(function(row) {
