@@ -4,16 +4,13 @@ define(["d3", "lodash", "baseChart", "heatMap"], function(d3, _, BaseChart, Heat
 
 var module = function($chartNode, customOptions, extendedEvents) {
 
+  var cities = null;
   var localEvents = [];
   var localOptions = {};
   var dimensions = null;
   var width = null;
   var height = null;
   var svg = null;
-  var mapG1 = null;
-  var mapG2 = null;
-  var map1 = null;
-  var map2 = null;
 
   var baseChart = new BaseChart($chartNode, localOptions, localEvents);
   baseChart.visualize = visualize;
@@ -21,12 +18,17 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.on('chartResize', onResize);
 
   var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  var cityScale = d3.scale.ordinal();
   var days = d3.scale.ordinal();
   var hours = d3.scale.ordinal().domain(d3.range(HOURS));
-  var color1 = d3.scale.linear().range(["white", "red"]);
-  var color2 = d3.scale.linear().range(["white", "blue"]);
+  var color = d3.scale.linear().range(["blue", "red"]);
 
-  function initialize() {
+  function initialize(_cities) {
+    cities = _cities.map(function(city) {return {name: city};});
+    console.log("cities", cities);
+    cityScale.domain(_cities);
+    console.log("cityScale.domain()", cityScale.domain());
+
     baseChart.initialize();
     onResize(baseChart.getDimensions());
 
@@ -34,21 +36,16 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    mapG1 = svg.append('g');
-    mapG2 = svg.append('g');
-    map1 = new HeatMap(mapG1);
-    map2 = new HeatMap(mapG2);
+    cities.forEach(function(city) {
+      city.group = svg.append('g').classed(city.name, true);
+      city.map = new HeatMap(city.group);
+      city.map.color(color);
+    });
 
     visualize();
   }
 
-  // var width = 6;
-  // var height = 6;
-
   function setData(data) {
-
-    console.log("data", data);
-
     var data1 = [
       [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
       [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
@@ -58,27 +55,11 @@ var module = function($chartNode, customOptions, extendedEvents) {
       [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
     ];
 
-    var data2 = [
-      [3, 2, 3],
-      [3, 2, 4],
-      [3, 2, 5]
-    ];
+    color.domain(d3.extent(_.flatten(data1)));
 
-    color1.domain(d3.extent(_.flatten(data1)));
-    color2.domain(d3.extent(_.flatten(data2)));
-
-    map1
-      .color(color1)
-      .setData(data1);
-
-    map2
-      .color(color2)
-      .setData(data2);
-
-    // setTimeout(function() {
-    //   map2.setData(data1);
-    //   console.log("mark", 1);
-    // }, 3000);
+    cities.forEach(function(city) {
+      city.map.setData(data1);
+    });
 
     visualize();
   }
@@ -87,16 +68,16 @@ var module = function($chartNode, customOptions, extendedEvents) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
+    cityScale.rangeBands([0, height], .2);
     visualize();
   }
 
   function visualize() {
     if (!svg) return;
-
-    mapG2.attr('transform', 'translate(0, ' + height / 2 + ')');
-
-    map1.visualize(width, height / 2);
-    map2.visualize(width, height / 2);
+    cities.forEach(function(city) {
+      city.group.attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
+      city.map.visualize(width, cityScale.rangeBand());
+    });
   }
 
   // exports
@@ -105,7 +86,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
     setData: setData
   };
 
-  initialize();
+  initialize(CITIES);
   return $.extend(exports, baseChart);
 };
 
