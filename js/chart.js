@@ -27,8 +27,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
 	  "San Francisco": 0,
 	  "Boston": 1,
 	  "Rio de Janeiro": 2,
-	  "Genève": 3, 
-	  "ಬೆಂಗಳೂರು": 4, 
+	  "Genève": 3,
+	  "ಬೆಂಗಳೂರು": 4,
 	  "Republik Singapura": 5,
 	  "上海市": 6
   };
@@ -73,7 +73,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .key(function(d) { return d.city_name; })
       .map(data);
 
-    var cityNames = Object.keys(cityMap);
+    var cityNames = Object.keys(cityMap).sort(function(a,b){
+      return cityOrder[a] - cityOrder[b];
+    });
+
     cityScale.domain(cityNames);
 
     cities = cityNames.map(function(name) {
@@ -91,8 +94,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
       });
 
       return city;
-    }).sort(function(a,b){
-    	return cityOrder[a] - cityOrder[b];
     });
 
     visualize();
