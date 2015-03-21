@@ -61,7 +61,12 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
           .attr('x', function(d, i) {return x(i);})
           .attr('width', function(d) {return x.rangeBand();})
           .attr('height', function(d) {return y.rangeBand();});
-        if (colorFn) boxes.attr('fill', colorFn);
+
+        if (colorFn) {
+          boxes
+          .transition()
+            .attr('fill', colorFn);
+        }
       });
   }
 
