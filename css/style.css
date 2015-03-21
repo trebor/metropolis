@@ -17,9 +17,16 @@ body {
   margin: 0px;
   display: flex;
   flex-direction: column;
-  font-family: myriad;
 }
-
+.type-title {
+    font-family: myriad;
+}
 .chart {
   flex: 1 1 100%;
+}
+.ಬೆಂಗಳೂರು {
+ font-family: 'kannada';	
+}
+.上海市 {
+ font-family: 'heiti';	
 }
