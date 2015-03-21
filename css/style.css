@@ -22,7 +22,7 @@ body {
   font-family: 'Noto Sans';
   color: gainsboro;
 }
-.type-title {
+.type-title, .city-title {
 	fill: gainsboro;
 }
 .chart {
