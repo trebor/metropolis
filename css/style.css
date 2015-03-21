@@ -1,14 +1,14 @@
 @font-face {
     font-family: "myriad";
-    src: url("MyriadSetPro-Thin_sub.woff") format('woff');
+    src: url("/css/MyriadSetPro-Thin_sub.woff") format('woff');
 }
 @font-face {
     font-family: "heiti";
-    src: url("STHeiti.woff") format('woff');
+    src: url("/css/STHeiti.woff") format('woff');
 }
 @font-face {
     font-family: "kannada";
-    src: url("KannadaSangamMN_sub.woff") format('woff');
+    src: url("/css/KannadaSangamMN_sub.woff") format('woff');
 }
 
 body {
