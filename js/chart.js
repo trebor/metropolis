@@ -23,11 +23,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var hours = d3.scale.ordinal().domain(d3.range(HOURS));
   var color = d3.scale.linear().range(["blue", "red"]);
 
-  function initialize(_cities) {
-    cities = _cities.map(function(city) {return {name: city};});
-    console.log("cities", cities);
-    cityScale.domain(_cities);
-    console.log("cityScale.domain()", cityScale.domain());
+  function initialize() {
 
     baseChart.initialize();
     onResize(baseChart.getDimensions());
@@ -43,17 +39,35 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .attr('dy', '1em')
       .text('Air Quaility');
 
-    cities.forEach(function(city) {
-      city.group = svg.append('g').classed(city.name, true);
-      city.group.append('text').text(city.name);
-      city.map = new HeatMap(city.group);
-      city.map.color(color);
-    });
-
     visualize();
   }
 
   function setData(data) {
+
+    var cityMap = d3.nest()
+      .key(function(d) { return d.city; })
+      .map(data);
+
+    var cityNames = Object.keys(cityMap);
+    cityScale.domain(cityNames);
+
+    cities = cityNames.map(function(name) {
+      var group = svg.append('g').classed(name, true);
+      var city = {
+        name: name,
+        group: group,
+        map: new HeatMap(group),
+        data: cityMap[name]
+      };
+
+      city.group.append('text').text(city.name);
+      city.map.color(color);
+
+      return city;
+    });
+
+    console.log("cities", cities);
+
     var data1 = [
       [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
       [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
@@ -81,7 +95,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   }
 
   function visualize() {
-    if (!svg) return;
+    if (!svg || !cities) return;
 
     svg
       .select('text.type-title')

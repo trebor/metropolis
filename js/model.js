@@ -41,15 +41,15 @@ define(['d3', 'crossfilter'], function(d3, _cs) {return function() {
     });
 
   function gotData(data) {
-    model = crossfilter(data);
+    // model = crossfilter(data);
 
-    dimentions = {};
-    SENSORS.forEach(function(sensorName) {
-      dimentions[sensorName] = model.dimension(function(d) {return d[sensorName];});
-    });
+    // dimentions = {};
+    // SENSORS.forEach(function(sensorName) {
+    //   dimentions[sensorName] = model.dimension(function(d) {return d[sensorName];});
+    // });
 
-    console.log("dimentions.airquality_raw.filter()", dimentions.airquality_raw.filter());
-    console.log("model()", model.size());
+    // console.log("dimentions.airquality_raw.filter()", dimentions.airquality_raw.filter());
+    // console.log("model()", model.size());
 
     dispatcher.data(data);
   }

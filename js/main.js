@@ -22,10 +22,5 @@ requirejs.config({
 
 define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
   var chart = new Chart($('.chart'));
-  var model = new Model()
-    .on('data', gotData);
-
-  function gotData(data) {
-    chart.setData(data.slice(0, 7 * HOURS));
-  }
+  var model = new Model().on('data', chart.setData);
 });
