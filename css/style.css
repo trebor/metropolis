@@ -1,9 +1,23 @@
+@font-face {
+    font-family: "myriad";
+    src: url("MyriadSetPro-Thin_sub.woff") format('woff');
+}
+@font-face {
+    font-family: "heiti";
+    src: url("STHeiti.woff") format('woff');
+}
+@font-face {
+    font-family: "kannada";
+    src: url("KannadaSangamMN_sub.woff") format('woff');
+}
+
 body {
   width: 100%;
   height: 100%;
   margin: 0px;
   display: flex;
   flex-direction: column;
+  font-family: myriad;
 }
 
 .chart {
