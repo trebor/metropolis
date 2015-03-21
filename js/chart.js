@@ -17,7 +17,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 20, right: 20, bottom: 20, left: 20};
+  var margin = {top: 70, right: 20, bottom: 20, left: 20};
   var cityScale = d3.scale.ordinal();
   var days = d3.scale.ordinal();
   var hours = d3.scale.ordinal().domain(d3.range(HOURS));
@@ -36,8 +36,16 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    svg.append('text')
+      .classed('type-title', true)
+      .attr('text-anchor', 'middle')
+      .attr('y', margin.top / -2)
+      .attr('dy', '1em')
+      .text('Air Quaility');
+
     cities.forEach(function(city) {
       city.group = svg.append('g').classed(city.name, true);
+      city.group.append('text').text(city.name);
       city.map = new HeatMap(city.group);
       city.map.color(color);
     });
@@ -74,6 +82,11 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   function visualize() {
     if (!svg) return;
+
+    svg
+      .select('text.type-title')
+      .attr('x', width / 2);
+
     cities.forEach(function(city) {
       city.group.attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
       city.map.visualize(width, cityScale.rangeBand());
