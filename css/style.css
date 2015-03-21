@@ -22,7 +22,11 @@ body {
   font-family: 'Noto Sans';
   color: #D1D0CE;
 }
-.type-title, .city-title {
+.type-title {
+	fill: #D1D0CE;
+	font-size: 36px;
+}
+.city-title {
 	fill: #D1D0CE;
 }
 .chart {
