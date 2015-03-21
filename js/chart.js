@@ -44,8 +44,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   function setData(data) {
 
+    console.log("data", data[0]);
+
     var cityMap = d3.nest()
-      .key(function(d) { return d.city; })
+      .key(function(d) { return d.city_name; })
       .map(data);
 
     var cityNames = Object.keys(cityMap);

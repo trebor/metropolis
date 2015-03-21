@@ -11,12 +11,12 @@ var CITIES = [
 ];
 
 var SENSORS = [
-  // 'temperature',
-  // 'light',
+  'temperature',
+  'light',
   'airquality_raw',
-  // 'sound,',
-  // 'humidity',
-  // 'dust',
+  'sound',
+  'humidity',
+  'dust',
 ];
 
 var DAYS = 7;
@@ -31,12 +31,12 @@ define(['d3', 'crossfilter'], function(d3, _cs) {return function() {
 
   var dispatcher = d3.dispatch(['data']);
 
-  d3.csv('data/small_data.txt', gotData)
+  d3.csv('data/all_data.csv', gotData)
     .row(function(d) {
       SENSORS.forEach(function(sensorName) {
         d[sensorName] = +d[sensorName];
       });
-      d.date = new Date(d.timestamp);
+      d.date = new Date(d.measurement_timestamp);
       return d;
     });
 
