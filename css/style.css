@@ -1,16 +1,16 @@
 @font-face {
     font-family: "myriadsetprothin";
-    src: url("file:///Users/admin/work/metropolis/css/MyriadSetPro-Thin_sub.woff") format('woff');
+    src: url("/css/MyriadSetPro-Thin_sub.woff") format('woff');
 	font-weight: 100;
 	font-style: normal;
 }
 @font-face {
     font-family: "heiti";
-    src: url("file:///Users/admin/work/metropolis/css/STHeiti.woff") format('woff');
+    src: url("/metropolis/css/STHeiti.woff") format('woff');
 }
 @font-face {
     font-family: "kannada";
-    src: url("file:///Users/admin/work/metropolis/css/KannadaSangamMN_sub.woff") format('woff');
+    src: url("/css/KannadaSangamMN_sub.woff") format('woff');
 }
 
 body {
