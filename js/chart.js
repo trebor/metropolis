@@ -23,6 +23,16 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var color = d3.scale.linear().range(["white", "blue"]);
   var colorScale = d3.scale.category10();
   var offset = 0;
+  var cityOrder = {
+	  "San Francisco": 0,
+	  "Boston": 1
+	  "Rio de Janeiro": 2,
+	  "Genève": 3, 
+	  "ಬೆಂಗಳೂರು": 4, 
+	  "Republik Singapura": 5,
+	  "上海市": 6
+  };
+
 
   function initialize() {
 
@@ -81,6 +91,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
       });
 
       return city;
+    }).sort(function(a,b){
+    	return cityOrder[a] - cityOrder[b];
     });
 
     visualize();
