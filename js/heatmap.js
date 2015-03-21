@@ -6,6 +6,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var x = d3.scale.ordinal();
   var y = d3.scale.ordinal();
   var colorFn = null;
+  var margin = {top: 5, right: 0, bottom: 0, left: 0};
 
   function setData(data, idAccess, _valueAccess) {
     valueAccess = _valueAccess || function(d) {return d;};
@@ -45,11 +46,11 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   }
 
   function visualize(_width, _height) {
-    width = _width;
-    height = _height;
+    width = _width - (margin.left + margin.right);
+    height = _height  - (margin.top + margin.bottom);
     if (!width || !height) {return;}
-    x.rangeRoundBands([0, width] , 0.1);
-    y.rangeRoundBands([0, height], 0.1);
+    x.rangeRoundBands([margin.left, width] , 0.1, 0);
+    y.rangeRoundBands([margin.top, height], 0.1, 0);
 
     gSelection.selectAll('g.row')
       .attr('transform', function(d, i) {
