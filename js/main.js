@@ -23,4 +23,12 @@ requirejs.config({
 define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
   var chart = new Chart($('.chart'));
   var model = new Model().on('data', chart.setData);
+  var currentSensorIdx = 0;
+
+  setInterval(updateFrame, 3000);
+
+  function updateFrame() {
+    chart.setFrame(SENSORS[currentSensorIdx], 200);
+    currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
+  }
 });

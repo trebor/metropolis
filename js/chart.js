@@ -4,6 +4,7 @@ define(["d3", "lodash", "baseChart", "heatMap"], function(d3, _, BaseChart, Heat
 
 var module = function($chartNode, customOptions, extendedEvents) {
 
+  var sensorMap = null;
   var cities = null;
   var localEvents = [];
   var localOptions = {};
@@ -19,7 +20,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   var margin = {top: 70, right: 20, bottom: 20, left: 20};
   var cityScale = d3.scale.ordinal();
-  var color = d3.scale.linear().range(["blue", "red"]);
+  var color = d3.scale.linear().range(["white", "blue"]);
   var offset = 0;
 
   function initialize() {
@@ -42,8 +43,15 @@ var module = function($chartNode, customOptions, extendedEvents) {
   }
 
   function setData(data) {
-
-    console.log("data", data[0]);
+    sensorMap = SENSORS.map(function(sensor) {
+      return {
+        extent: d3.extent(data, function(d) {return d[sensor];}),
+        name: sensor
+      };
+    }).reduce(function(p, c) {
+      p[c.name] = c.extent;
+      return p;
+    }, {});
 
     var cityMap = d3.nest()
       .key(function(d) { return d.city_name; })
@@ -62,38 +70,42 @@ var module = function($chartNode, customOptions, extendedEvents) {
       };
 
       city.group.append('text').classed('city-title', true).text(city.name);
-      city.map.color(color);
+      city.map.color(function(d) {
+        return color(d.value);
+      });
 
       return city;
     });
 
     console.log("cities", cities);
 
-    // var data1 = [
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    //   [1, 2, 3, 4, 5, 1, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-    // ];
-
-    // color.domain(d3.extent(_.flatten(data1)));
+    setFrame('airquality_raw', 0);
 
     visualize();
   }
 
-  // function setFrame(_type, _offset) {
+  var ROW_COUNT = 7;
+  var COL_COUNT = 24;
 
-  //   cities.forEach(function(city) {
-  //     var rows = [];
-  //     d3.range(7).forEach(function(row) {
-  //       rows.push(city.data[_offset + 
+  function setFrame(type, offset) {
+    color.domain(sensorMap[type]);
+    d3.select('.type-title').text(type);
+    cities.forEach(function(city) {
+      var rows = d3.range(ROW_COUNT).map(function(row) {
+        var base = offset + row * COL_COUNT;
+        return city.data.slice(base, base + COL_COUNT).map(function(d) {
+          return {
+            id: d.date,
+            type: type,
+            value: d[type]
+          };
+        });
+      });
 
-  //     city.map.setData(data1);
-  //   });
-  //   visualize();
-  // }
+      city.map.setData(rows);
+    });
+    visualize();
+  }
 
   function onResize(_dimensions) {
     dimensions = _dimensions;
@@ -120,8 +132,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
   // exports
 
   var exports = {
-    setData: setData
-    // setOffset: setOffset
+    setData: setData,
+    setFrame: setFrame
   };
 
   initialize(CITIES);
