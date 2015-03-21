@@ -25,7 +25,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var offset = 0;
   var cityOrder = {
 	  "San Francisco": 0,
-	  "Boston": 1
+	  "Boston": 1,
 	  "Rio de Janeiro": 2,
 	  "Genève": 3, 
 	  "ಬೆಂಗಳೂರು": 4, 
