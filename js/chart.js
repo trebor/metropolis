@@ -71,7 +71,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
       var city = {
         name: name,
         group: group,
-        map: new HeatMap(group),
+        map: new HeatMap(group, function(d) {return d.id;}),
         data: cityMap[name]
       };
 
@@ -91,7 +91,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   function setFrame(type, offset) {
     color = sensorMap[type].color;
-    d3.select('.type-title').text(type);
+    d3.select('.type-title').text(SENSOR_TITLE[type]);
     cities.forEach(function(city) {
       var rows = d3.range(ROW_COUNT).map(function(row) {
         var base = offset + row * COL_COUNT;

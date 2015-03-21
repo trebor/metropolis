@@ -26,7 +26,7 @@ define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
   var model = new Model().on('data', function(data) {
     chart.setData(data);
 
-    setInterval(updateFrame, 3000);
+    setInterval(updateFrame, 5000);
     updateFrame();
 
     function updateFrame() {

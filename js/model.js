@@ -19,6 +19,15 @@ var SENSORS = [
   'dust',
 ];
 
+var SENSOR_TITLE = {
+  'light': 'Light',
+  'temperature': 'Temperature',
+  'airquality_raw': 'Air Quality',
+  'sound': 'Sound',
+  'humidity': 'Humidity',
+  'dust': 'Dust'
+};
+
 var DAYS = 7;
 var HOURS = 24;
 
