@@ -19,14 +19,14 @@ body {
   flex-direction: column;
 }
 .type-title {
-    font-family: myriad;
+    font-family: "myriad";
 }
 .chart {
   flex: 1 1 100%;
 }
 .ಬೆಂಗಳೂರು {
- font-family: 'kannada';	
+ font-family: "kannada";	
 }
 .上海市 {
- font-family: 'heiti';	
+ font-family: "heiti";	
 }
