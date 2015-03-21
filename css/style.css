@@ -20,6 +20,7 @@ body {
   display: flex;
   flex-direction: column;
   font-family: 'Noto Sans';
+  color: 'gainsboro';
 }
 
 .chart {
