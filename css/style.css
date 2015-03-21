@@ -21,11 +21,7 @@ body {
   flex-direction: column;
   font-family: 'Noto Sans';
 }
-.type-title {
-    font-family: "myriadsetprothin";
-	font-weight: 100;
-	font-style: normal;
-}
+
 .chart {
   flex: 1 1 100%;
 }
