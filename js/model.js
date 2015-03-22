@@ -28,8 +28,8 @@ var SENSOR_TITLE = {
   'dust': 'Dust'
 };
 
-var DAYS = 7;
-var HOURS = 24;
+var FRAME_DELAY = 5000;
+var TRANSITION_DURATION = 2500;
 
 // define data model module
 

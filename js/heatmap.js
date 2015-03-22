@@ -57,7 +57,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     if (colorFn) {
       cells
         .transition()
-        .duration(2500)
+        .duration(TRANSITION_DURATION)
         .attr('fill', colorFn);
     }
   }
