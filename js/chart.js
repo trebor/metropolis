@@ -50,8 +50,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .classed('type-title', true)
       .attr('text-anchor', 'middle')
       .attr('y', margin.top / -2)
-      .attr('dy', '0.5em')
-      .text('Air Quaility');
+      .attr('opacity', 0)
+      .attr('dy', '0.5em');
 
     visualize();
   }
@@ -103,7 +103,18 @@ var module = function($chartNode, customOptions, extendedEvents) {
   }
 
   function setFrame(sensor, offset) {
-    d3.select('.type-title').text(SENSOR_TITLE[sensor]);
+
+    if (d3.select('.type-title').text() != SENSOR_TITLE[sensor]) {
+      d3.select('.type-title')
+        .transition()
+        .attr('opacity', 0)
+        .transition()
+        .duration(0)
+        .text(SENSOR_TITLE[sensor])
+        .transition()
+        .attr('opacity', 1);
+    }
+
     cities.forEach(function(city) {
       city.map
         .color(function(d) {
