@@ -4,6 +4,10 @@ define(["d3", "lodash", "baseChart", "heatMap"], function(d3, _, BaseChart, Heat
 
 var module = function($chartNode, customOptions, extendedEvents) {
 
+
+  var ROW_COUNT = 7;
+  var COL_COUNT = 24;
+
   var sensorMap = null;
   var cities = null;
   var localEvents = [];
@@ -99,25 +103,14 @@ var module = function($chartNode, customOptions, extendedEvents) {
     visualize();
   }
 
-  var ROW_COUNT = 7;
-  var COL_COUNT = 24;
-
   function setFrame(type, offset) {
     color = sensorMap[type].color;
     d3.select('.type-title').text(SENSOR_TITLE[type]);
     cities.forEach(function(city) {
-      var rows = d3.range(ROW_COUNT).map(function(row) {
-        var base = offset + row * COL_COUNT;
-        return city.data.slice(base, base + COL_COUNT).map(function(d) {
-          return {
-            id: d.date,
-            type: type,
-            value: d[type]
-          };
-        });
-      });
-
-      city.map.setData(rows);
+      city.map.setData(
+        city.data.slice(offset, offset + ROW_COUNT * COL_COUNT),
+        COL_COUNT,
+        function(d) {return d.id;});
     });
     visualize();
   }
