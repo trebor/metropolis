@@ -26,6 +26,8 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
       .enter()
       .append('rect')
       .classed('cell', true)
+      .attr('rx', 3)
+      .attr('ry', 3)
       .attr('width', 0)
       .attr('height', 0)
       .attr('fill', 'white');
@@ -54,10 +56,12 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     if (!_width || !_height || !cells) {return;}
     width = _width - (margin.left + margin.right);
     height = _height  - (margin.top + margin.bottom);
-    x.rangeRoundBands([margin.left, width] , 0.1, 0);
+    x.rangeRoundBands([margin.left, width], 0.02, 0);
     y.rangeRoundBands([margin.top, height], 0.1, 0);
 
     cellsEnter
+      // .attr('rx', x.rangeBand() * 0.5)
+      // .attr('ry', y.rangeBand() * 0.5)
       .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
       .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;});
 
