@@ -23,9 +23,18 @@ requirejs.config({
 define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
   var currentSensorIdx = 0;
   var frameCount = 0;
-  var timeIndex = 0;
+  
+  //to-do: change this arbitrary number to react to complete data sets
+  //		when the data sets are complete
+  var maxIndex = 1416; 
+  var minIndex = 24;
+  var timeIndex = minIndex;
+  
   var chart = new Chart($('.chart'));
   var model = new Model().on('data', function(data) {
+	  
+	//  console.log(data);  
+	  
     chart.setData(data);
 
     setInterval(updateFrame, FRAME_DELAY);
@@ -36,9 +45,13 @@ define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
       ++frameCount;
       if (frameCount % 7 == 0) {
         currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
-      } else {
-        timeIndex += 24;
-      }
+      } 
+	  
+      timeIndex += 24;
+	  if (timeIndex > maxIndex) {
+		  timeIndex = minIndex;
+	  }
+      
     }
   });
 
