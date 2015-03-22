@@ -33,7 +33,7 @@ var TRANSITION_DURATION = 2500;
 
 // define data model module
 
-define(['d3', 'crossfilter'], function(d3, _cs) {return function() {
+define(['d3'], function(d3) {return function() {
 
   var model = null;
   var dimentions = null;
@@ -50,16 +50,6 @@ define(['d3', 'crossfilter'], function(d3, _cs) {return function() {
     });
 
   function gotData(data) {
-    // model = crossfilter(data);
-
-    // dimentions = {};
-    // SENSORS.forEach(function(sensorName) {
-    //   dimentions[sensorName] = model.dimension(function(d) {return d[sensorName];});
-    // });
-
-    // console.log("dimentions.airquality_raw.filter()", dimentions.airquality_raw.filter());
-    // console.log("model()", model.size());
-
     dispatcher.data(data);
   }
 

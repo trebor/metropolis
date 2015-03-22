@@ -8,6 +8,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var colorFn = null;
   var margin = {top: 5, right: 0, bottom: 0, left: 0};
   var cells = null;
+  var cellsEnter = null;
 
   function setData(data, columns, idAccess) {
     idAccess = idAccess || function(d, i) {return i;};
@@ -21,14 +22,22 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
     cells = gSelection.selectAll('rect.cell').data(data, idAccess);
 
-    cells
+    cellsEnter = cells
       .enter()
       .append('rect')
       .classed('cell', true)
+      .attr('width', 0)
+      .attr('height', 0)
       .attr('fill', 'white');
 
     cells
       .exit()
+      .transition()
+      .duration(TRANSITION_DURATION)
+      .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
+      .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;})
+      .attr('width', 0)
+      .attr('height', 0)
       .remove();
 
     visualize();
@@ -48,18 +57,18 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     x.rangeRoundBands([margin.left, width] , 0.1, 0);
     y.rangeRoundBands([margin.top, height], 0.1, 0);
 
+    cellsEnter
+      .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
+      .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;});
+
     cells
+      .transition()
+      .duration(TRANSITION_DURATION)
       .attr('x', function(d) {return x(d.x);})
       .attr('y', function(d) {return y(d.y);})
       .attr('width', function(d) {return x.rangeBand();})
-      .attr('height', function(d) {return y.rangeBand();});
-
-    if (colorFn) {
-      cells
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('fill', colorFn);
-    }
+      .attr('height', function(d) {return y.rangeBand();})
+      .attr('fill', colorFn);
   }
 
   var exports = {
