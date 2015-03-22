@@ -112,6 +112,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
         .duration(0)
         .text(SENSOR_TITLE[sensor])
         .transition()
+        .duration(TRANSITION_DURATION / 3)
         .attr('opacity', 1);
     }
 
