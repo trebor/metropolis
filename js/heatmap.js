@@ -6,7 +6,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var x = d3.scale.ordinal();
   var y = d3.scale.ordinal();
   var colorFn = null;
-  var margin = {top: 35, bottom: 0, left: 0, right: 0};
+  var margin = {top: 25, bottom: 5, left: 10, right: 10};
   var cells = null;
   var cellsEnter = null;
 

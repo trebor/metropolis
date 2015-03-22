@@ -22,8 +22,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  // var margin = {top: 70, right: 10, bottom: 0, left: 10};
-  var margin = {top: 70, bottom: 0, left: 0, right: 0};
+  var margin = {top: 70, right: 10, bottom: 0, left: 10};
   var cityScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
   var offset = 0;
