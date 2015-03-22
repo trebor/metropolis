@@ -9,16 +9,15 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var margin = {top: 5, right: 0, bottom: 0, left: 0};
   var cells = null;
 
-  function setData(data, columns, idAccess, _valueAccess) {
-    valueAccess = _valueAccess || function(d) {return d;};
+  function setData(data, columns, idAccess) {
     idAccess = idAccess || function(d, i) {return i;};
 
     data = data.map(function(d, i) {
-      return $.extend({x: i % columns, y: i / columns}, d);
+      return $.extend({x: i % columns, y: Math.floor(i / columns)}, d);
     });
 
-    x.domain(d3.range(columns));
-    y.domain(d3.range(data.length / columns));
+    x.domain(d3.range(d3.max(data, function(d) {return d.x;}) + 1));
+    y.domain(d3.range(d3.max(data, function(d) {return d.y;}) + 1));
 
     cells = gSelection.selectAll('rect.cell').data(data, idAccess);
 

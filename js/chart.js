@@ -24,7 +24,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   var margin = {top: 70, right: 20, bottom: 20, left: 20};
   var cityScale = d3.scale.ordinal();
-  var color = d3.scale.linear().range(["white", "blue"]);
   var colorScale = d3.scale.category10();
   var offset = 0;
   var cityOrder = {
@@ -93,9 +92,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
       };
 
       city.group.append('text').classed('city-title', true).text(city.name);
-      city.map.color(function(d) {
-        return color(d.value);
-      });
 
       return city;
     });
@@ -103,14 +99,17 @@ var module = function($chartNode, customOptions, extendedEvents) {
     visualize();
   }
 
-  function setFrame(type, offset) {
-    color = sensorMap[type].color;
-    d3.select('.type-title').text(SENSOR_TITLE[type]);
+  function setFrame(sensor, offset) {
+    d3.select('.type-title').text(SENSOR_TITLE[sensor]);
     cities.forEach(function(city) {
-      city.map.setData(
-        city.data.slice(offset, offset + ROW_COUNT * COL_COUNT),
-        COL_COUNT,
-        function(d) {return d.id;});
+      city.map
+        .color(function(d) {
+          return sensorMap[sensor].color(d[sensor]);
+        })
+        .setData(
+          city.data.slice(offset, offset + ROW_COUNT * COL_COUNT),
+          COL_COUNT,
+          function(d) {return d.id;});
     });
     visualize();
   }
