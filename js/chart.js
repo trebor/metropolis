@@ -22,7 +22,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 70, right: 20, bottom: 20, left: 20};
+  // var margin = {top: 70, right: 10, bottom: 0, left: 10};
+  var margin = {top: 70, bottom: 0, left: 0, right: 0};
   var cityScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
   var offset = 0;
@@ -50,7 +51,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .classed('type-title', true)
       .attr('text-anchor', 'middle')
       .attr('y', margin.top / -2)
-      .attr('dy', '1em')
+      .attr('dy', '0.5em')
       .text('Air Quaility');
 
     visualize();
@@ -84,14 +85,17 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
     cities = cityNames.map(function(name) {
       var group = svg.append('g').classed(name, true);
+
+      group.append('text')
+        .classed('city-title', true).text(name)
+        .attr('dy', '.9em');
+
       var city = {
         name: name,
         group: group,
         map: new HeatMap(group, function(d) {return d.id;}),
         data: cityMap[name]
       };
-
-      city.group.append('text').classed('city-title', true).text(city.name);
 
       return city;
     });
@@ -118,7 +122,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
-    cityScale.rangeBands([0, height], .2);
+    cityScale.rangeBands([0, height], 0);
     visualize();
   }
 

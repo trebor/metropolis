@@ -6,7 +6,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var x = d3.scale.ordinal();
   var y = d3.scale.ordinal();
   var colorFn = null;
-  var margin = {top: 5, right: 0, bottom: 0, left: 0};
+  var margin = {top: 35, bottom: 0, left: 0, right: 0};
   var cells = null;
   var cellsEnter = null;
 
@@ -54,14 +54,12 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
   function visualize(_width, _height) {
     if (!_width || !_height || !cells) {return;}
-    width = _width - (margin.left + margin.right);
-    height = _height  - (margin.top + margin.bottom);
-    x.rangeRoundBands([margin.left, width], 0.02, 0);
-    y.rangeRoundBands([margin.top, height], 0.1, 0);
+    width  = _width  - (margin.left + margin.right );
+    height = _height - (margin.top  + margin.bottom);
+    x.rangeBands([margin.left, width + margin.left], 0.02);
+    y.rangeBands([margin.top, height + margin.top], 0.1);
 
     cellsEnter
-      // .attr('rx', x.rangeBand() * 0.5)
-      // .attr('ry', y.rangeBand() * 0.5)
       .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
       .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;});
 
