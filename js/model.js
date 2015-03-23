@@ -11,8 +11,8 @@ var CITIES = [
 ];
 
 var SENSORS = [
-  'light',
   'temperature',
+  'light',
   'airquality_raw',
   'sound',
   'humidity',
@@ -20,12 +20,12 @@ var SENSORS = [
 ];
 
 var SENSOR_DETAILS = {
-  'light':          {title: 'Light',       unit: '㏓'       },
-  'temperature':    {title: 'Temperature', unit: '℃'       },
-  'airquality_raw': {title: 'Air Quality', unit: 'mV'       },
-  'sound':          {title: 'Sound',       unit: 'dB'       },
-  'humidity':       {title: 'Humidity',    unit: '%'        },
-  'dust':           {title: 'Dust',        unit: 'pcs/238mL'}
+  'light':          {title: 'Light',       color: ['#ffffff', '#bcbd22'], unit: '㏓'       },
+  'temperature':    {title: 'Temperature', color: ['#17becf', '#d62728'], unit: '℃'       },
+  'airquality_raw': {title: 'Air Quality', color: ['#ffffff', '#2ca02c'], unit: 'mV'       },
+  'sound':          {title: 'Sound',       color: ['#ffffff', '#ff7f0e'], unit: 'dB'       },
+  'humidity':       {title: 'Humidity',    color: ['#ffffff', '#9467bd'], unit: '%'        },
+  'dust':           {title: 'Dust',        color: ['#ffffff', '#7f7f7f'], unit: 'pcs/238mL'}
 };
 
 var FRAME_DELAY = 5000;

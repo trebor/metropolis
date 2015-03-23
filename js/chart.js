@@ -69,10 +69,11 @@ var module = function($chartNode, customOptions, extendedEvents) {
         name: sensor
       };
     }).reduce(function(p, c) {
+      var details = SENSOR_DETAILS[c.name];
       p[c.name] = {
         extent: c.extent,
         color: d3.scale.linear()
-          .range(['white', colorScale(c.name)])
+          .range(details.color)
           .domain(c.extent)
       };
       return p;
