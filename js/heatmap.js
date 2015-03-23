@@ -1,8 +1,8 @@
 define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
   var X_AXIS_CORRECT = 5;
-  var Y_AXIS_CORRECT = 5;
-
+  var Y_AXIS_CORRECT_X = 12;
+  var Y_AXIS_CORRECT_Y = 6;
   var valueAccess = null;
   var width = null;
   var height = null;
@@ -12,7 +12,6 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var xAxis = d3.svg.axis().scale(x).orient('top').tickFormat(xFormat);
   var yAxis = d3.svg.axis()
     .scale(yTimeScale)
-    .tickValues([new Date(), new Date(), new Date()])
     .tickPadding(10)
     .orient('left').tickFormat(yFormat);
   var colorFn = null;
@@ -45,29 +44,18 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
     idAccess = idAccess || function(d, i) {return i;};
 
-    console.log("_data.length", _data.length);
     data = _data.map(function(d, i) {
       return $.extend({x: i % columns, y: Math.floor(i / columns)}, d);
     });
 
-    console.log("data.length", data.length);
+    var dates = data
+      .filter(function(d, i) {return i % columns == 0;})
+      .map(function(d) {return normalizeDate(d.date);});
+    yAxis.tickValues(dates);
 
     x.domain(d3.range(d3.max(data, function(d) {return d.x;}) + 1));
     y.domain(d3.range(d3.max(data, function(d) {return d.y;}) + 1));
     yTimeScale.domain([normalizeDate(data[0].date), normalizeDate(data[data.length - 1].date)]);
-
-    // yTimeScale.domain(d3.extent(_data, function(d) {
-    //   // var date = d.date;
-    //   // return new Date(date.getYear() + 1900, date.getMonth(), date.getDate());
-    //   return d.date;
-    // }))
-
-    var extent1 = d3.extent(_data, function(d) {return d.date;});
-    var extent2 = yTimeScale.domain();
-    console.log("extent days 1:", dayOfYear(extent1[1]) - dayOfYear(extent1[0]));
-    console.log("extent days 2:", dayOfYear(extent2[1]) - dayOfYear(extent2[0]));
-
-    // console.log("yTimeScale.domain()", yTimeScale.domain());
 
     cells = gSelection.selectAll('rect.cell').data(data, idAccess);
 
@@ -142,7 +130,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     yAxisG
       .transition()
       .duration(TRANSITION_DURATION)
-      .attr('transform', 'translate(' + (margin.left + Y_AXIS_CORRECT) + ', 0)')
+      .attr('transform', 'translate(' + (margin.left + Y_AXIS_CORRECT_X) + ', ' + Y_AXIS_CORRECT_Y + ')')
       .call(yAxis);
 
   }
