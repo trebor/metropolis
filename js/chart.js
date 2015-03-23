@@ -147,7 +147,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
     dimensions = _dimensions;
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
-    cityScale.rangeBands([0, height], 0);
+    cityScale.rangeBands([0, height], 0.02, 0);
     visualize();
   }
 
