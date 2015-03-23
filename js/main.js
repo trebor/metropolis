@@ -1,4 +1,3 @@
-<<<<<<< Local Changes
 requirejs.config({
   baseUrl: 'bower_components',
   paths: {
@@ -71,5 +70,3 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
 	  popup.show();
   });
 });
-=======
->>>>>>> External Changes
