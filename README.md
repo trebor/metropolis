@@ -2,6 +2,6 @@
 
 A visualization of enviroinmental data collected in cities around the world.
 
-- Eric Swedberg
+- Erik Swedberg
 - Nathan Chan
 - Robert Harris
