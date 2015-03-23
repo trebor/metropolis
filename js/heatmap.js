@@ -16,7 +16,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _
     .tickPadding(10)
     .orient('left').tickFormat(yFormat);
   var colorFn = null;
-  var margin = _margin || {top: 40, bottom: 8, left: 35, right: 10};
+  var margin = _margin || {top: 40, bottom: 8, left: 40, right: 15};
   var cells = null;
   var cellsEnter = null;
   var data = null;

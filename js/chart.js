@@ -1,4 +1,4 @@
-define(["d3", "lodash", "baseChart", "heatMap", "legend"], function(d3, _, BaseChart, HeatMap, Legend) {
+define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseChart, HeatMap, Legend) {
 
 // base svg chart, which auto resizes to fit containing element
 
@@ -31,13 +31,13 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var colorScale = d3.scale.category10();
   var offset = 0;
   var cityOrder = {
-	  "San Francisco": 0,
-	  "Boston": 1,
-	  "Rio de Janeiro": 2,
-	  "Genève": 3,
-	  "ಬೆಂಗಳೂರು": 4,
-	  "Republik Singapura": 5,
-	  "上海市": 6
+	  'San Francisco': 0,
+	  'Boston': 1,
+	  'Rio de Janeiro': 2,
+	  'Genève': 3,
+	  'ಬೆಂಗಳೂರು': 4,
+	  'Republik Singapura': 5,
+	  '上海市': 6
   };
 
   function initialize() {
@@ -46,8 +46,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
     onResize(baseChart.getDimensions());
 
     svg = baseChart.getContainer()
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .append('g')
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
     legendG = svg.append('g').classed('legend', true);
     legend = new Legend(legendG);
@@ -72,7 +72,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
       p[c.name] = {
         extent: c.extent,
         color: d3.scale.linear()
-          .range(["white", colorScale(c.name)])
+          .range(['white', colorScale(c.name)])
           .domain(c.extent)
       };
       return p;
@@ -108,15 +108,21 @@ var module = function($chartNode, customOptions, extendedEvents) {
     visualize();
   }
 
+  function sensorName(sensor) {
+    return SENSOR_DETAILS[sensor].title + '  ' + SENSOR_DETAILS[sensor].unit + '';
+  }
+
   function setFrame(sensor, offset) {
 
-    if (d3.select('.type-title').text() != SENSOR_TITLE[sensor]) {
+    var sensorNameStr = sensorName(sensor);
+
+    if (d3.select('.type-title').text() != sensorNameStr) {
       d3.select('.type-title')
         .transition()
         .attr('opacity', 0)
         .transition()
         .duration(0)
-        .text(SENSOR_TITLE[sensor])
+        .text(sensorNameStr)
         .transition()
         .duration(TRANSITION_DURATION / 3)
         .attr('opacity', 1);

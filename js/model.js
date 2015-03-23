@@ -19,13 +19,13 @@ var SENSORS = [
   'dust',
 ];
 
-var SENSOR_TITLE = {
-  'light': 'Light',
-  'temperature': 'Temperature',
-  'airquality_raw': 'Air Quality',
-  'sound': 'Sound',
-  'humidity': 'Humidity',
-  'dust': 'Dust'
+var SENSOR_DETAILS = {
+  'light':          {title: 'Light',       unit: '㏓'       },
+  'temperature':    {title: 'Temperature', unit: '℃'       },
+  'airquality_raw': {title: 'Air Quality', unit: 'mV'       },
+  'sound':          {title: 'Sound',       unit: 'dB'       },
+  'humidity':       {title: 'Humidity',    unit: '%'        },
+  'dust':           {title: 'Dust',        unit: 'pcs/238mL'}
 };
 
 var FRAME_DELAY = 5000;
