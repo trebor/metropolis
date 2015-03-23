@@ -56,3 +56,110 @@ body {
 .上海市 {
   font-family: "heiti";
 }
+
+.header {
+	position: absolute;
+	top: 30px;
+	right: 27px;
+	width: 96px;
+	height: 22px;
+	text-align: right;
+}
+.header .about-link {
+	color: #B6B6B4;
+	text-decoration: none;
+	opacity: 0.5;
+}
+.header .about-link:hover {
+	color: #B6B6B4;
+	text-decoration: underline;
+	opacity: 1;
+}
+
+.popup {
+	display: none;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	/* position: relative;*/
+}
+.popup-content {
+	background: white;
+	min-width: 250px;
+	min-height: 500px;
+	max-width: 700px;
+	padding: 20px;
+	position: relative;
+}
+.popup.shown {
+	display: block;
+}
+body.popup-on {
+	overflow: hidden;
+}
+body.popup-on .popup {
+	overflow-y: auto;
+}
+
+body.popup-on .popup-mask {
+	display: block;
+}
+.popup-mask {
+	position: fixed;
+	display: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.3);
+	z-index: 0;
+}
+.popup-cont-cont-cont {
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+.popup-cont-cont {
+	display: table-row;
+}
+.popup-cont {
+	display: table-cell;
+	vertical-align: middle;
+	width: 100%;
+}
+.popup-dialog {
+    min-width: 250px;
+     max-width: 500px;
+     margin: auto;	
+}
+.popup-close {
+	position: absolute;
+	top: 30px;
+	right: 20px;
+	font-size: smaller;
+	color: #B6B6B4;
+	text-decoration: none;
+}
+.popup-close:hover { 
+	text-decoration: underline;
+}
+.popup-title {
+	font-size: 36px;
+	  line-height: 1em;
+	  margin: 0;
+}
+.popup-content a {
+	text-decoration: none;
+	color: skyblue;
+}
+.popup-content a:hover {
+	text-decoration: underline;
+}
+html, body {
+	height: 100%;
+	width: 100%;
+}

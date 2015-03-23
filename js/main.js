@@ -7,20 +7,28 @@ requirejs.config({
     d3:          'd3/d3.min',
     crossfilter: 'crossfilter/crossfilter.min',
     jquery:      'jquery/dist/jquery.min',
+    underscore:  'underscore/underscore-min',
     lodash:      'lodash/dist/lodash.min',
+    nunjucks:    'nunjucks/browser/nunjucks.min',
+    domReady:    'requirejs-domready/domReady',
+    text:        'requirejs-text/text',
 
     // local code
 
     baseChart: '../js/basechart',
     heatMap:   '../js/heatmap',
     model:     '../js/model',
-    chart:     '../js/chart'
+    chart:     '../js/chart',
+    popup:     '../js/widgets/popup'
   },
   shim: {
+      'underscore': {
+          exports: '_'
+      }
   }
 });
 
-define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
+define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/about.html', 'domReady!'], function ($, Chart, Model, Popup, Nunjucks, aboutHTML, doc) {
   var currentSensorIdx = 0;
   var frameCount = 0;
   //to-do: change this arbitrary number to react to complete data sets
@@ -50,5 +58,16 @@ define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
 	    }
     }
   });
-
+  
+  //init About Popup  
+  //var aboutHTML = require('text!templates/about.html');
+  var aboutTemplate = new Nunjucks.Template(aboutHTML);
+  var popup = new Popup();
+  popup.init({'body': aboutTemplate.render(), 'title': 'About'});
+  
+  $('.about-link').on('click', function(e) {
+	  e.preventDefault();
+	  popup.show();
+  })
+  
 });
