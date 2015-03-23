@@ -30,7 +30,7 @@ var SENSOR_TITLE = {
 
 var FRAME_DELAY = 5000;
 var TRANSITION_DURATION = 2500;
-// var FRAME_DELAY = 500;
+// var FRAME_DELAY = 100;
 // var TRANSITION_DURATION = 100;
 
 // define data model module

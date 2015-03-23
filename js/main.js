@@ -23,7 +23,7 @@ requirejs.config({
 define(['jquery', 'chart', 'model'], function ($, Chart, Model) {
   var currentSensorIdx = 0;
   var frameCount = 0;
-  var timeIndex = 0;
+  var timeIndex = 24;
   var chart = new Chart($('.chart'));
   var model = new Model().on('data', function(data) {
     chart.setData(data);

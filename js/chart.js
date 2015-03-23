@@ -22,7 +22,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 70, right: 10, bottom: 0, left: 10};
+  var margin = {top: 70, right: 10, bottom: 10, left: 10};
   var cityScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
   var offset = 0;
@@ -92,7 +92,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
       var city = {
         name: name,
         group: group,
-        map: new HeatMap(group, function(d) {return d.id;}),
+        map: new HeatMap(group),
         data: cityMap[name]
       };
 
@@ -145,7 +145,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .attr('x', width / 2);
 
     cities.forEach(function(city) {
-      city.group.attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
+      city.group
+        .transition()
+        .duration(TRANSITION_DURATION)
+        .attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
       city.map.visualize(width, cityScale.rangeBand());
     });
   }
