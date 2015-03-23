@@ -59,16 +59,15 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
 	    }
     }
   });
-  
-  //init About Popup  
+
+  //init About Popup
   //var aboutHTML = require('text!templates/about.html');
   var aboutTemplate = new Nunjucks.Template(aboutHTML);
   var popup = new Popup();
   popup.init({'body': aboutTemplate.render(), 'title': 'About'});
-  
+
   $('.about-link').on('click', function(e) {
 	  e.preventDefault();
 	  popup.show();
-  })
-  
+  });
 });
