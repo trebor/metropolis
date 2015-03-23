@@ -13,6 +13,7 @@ requirejs.config({
 
     baseChart: '../js/basechart',
     heatMap:   '../js/heatmap',
+    legend:    '../js/legend',
     model:     '../js/model',
     chart:     '../js/chart'
   },

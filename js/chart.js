@@ -1,18 +1,22 @@
-define(["d3", "lodash", "baseChart", "heatMap"], function(d3, _, BaseChart, HeatMap) {
+define(["d3", "lodash", "baseChart", "heatMap", "legend"], function(d3, _, BaseChart, HeatMap, Legend) {
 
 // base svg chart, which auto resizes to fit containing element
 
 var module = function($chartNode, customOptions, extendedEvents) {
 
-
   var ROW_COUNT = 7;
   var COL_COUNT = 24;
+  var LEGEND_COUNT = 5;
+  var LEGEND_HEIGHT = 40;
+  var LEGEND_WIDTH = LEGEND_HEIGHT * LEGEND_COUNT;
 
   var sensorMap = null;
   var cities = null;
   var localEvents = [];
   var localOptions = {};
   var dimensions = null;
+  var legend = null;
+  var legendG = null;
   var width = null;
   var height = null;
   var svg = null;
@@ -22,7 +26,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 70, right: 10, bottom: 10, left: 10};
+  var margin = {top: 130, right: 10, bottom: 10, left: 10};
   var cityScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
   var offset = 0;
@@ -36,7 +40,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
 	  "上海市": 6
   };
 
-
   function initialize() {
 
     baseChart.initialize();
@@ -46,12 +49,15 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    legendG = svg.append('g').classed('legend', true);
+    legend = new Legend(legendG);
+
     svg.append('text')
       .classed('type-title', true)
       .attr('text-anchor', 'middle')
       .attr('y', margin.top / -2)
       .attr('opacity', 0)
-      .attr('dy', '0.5em');
+      .attr('dy', '-.2em');
 
     visualize();
   }
@@ -116,11 +122,13 @@ var module = function($chartNode, customOptions, extendedEvents) {
         .attr('opacity', 1);
     }
 
+    legend
+      .color(sensorMap[sensor].color)
+      .setData(sensorMap[sensor].extent, LEGEND_COUNT);
+
     cities.forEach(function(city) {
       city.map
-        .color(function(d) {
-          return sensorMap[sensor].color(d[sensor]);
-        })
+        .color(function(d) {return sensorMap[sensor].color(d[sensor]);})
         .setData(
           city.data.slice(offset, offset + ROW_COUNT * COL_COUNT),
           COL_COUNT,
@@ -151,6 +159,11 @@ var module = function($chartNode, customOptions, extendedEvents) {
         .attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
       city.map.visualize(width, cityScale.rangeBand());
     });
+
+    legendG
+      .attr('transform', 'translate(' + [(width - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
+
+    legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
   }
 
 

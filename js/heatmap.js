@@ -1,4 +1,4 @@
-define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
+define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _xSpaceing) {
 
   var X_AXIS_CORRECT = 5;
   var Y_AXIS_CORRECT_X = 12;
@@ -8,6 +8,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   var height = null;
   var x = d3.scale.ordinal();
   var y = d3.scale.ordinal();
+  var xSpaceing = _xSpaceing || 0.02;
   var yTimeScale = d3.time.scale();
   var xAxis = d3.svg.axis().scale(x).orient('top').tickFormat(xFormat);
   var yAxis = d3.svg.axis()
@@ -15,7 +16,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     .tickPadding(10)
     .orient('left').tickFormat(yFormat);
   var colorFn = null;
-  var margin = {top: 40, bottom: 8, left: 35, right: 10};
+  var margin = _margin || {top: 40, bottom: 8, left: 35, right: 10};
   var cells = null;
   var cellsEnter = null;
   var data = null;
@@ -32,6 +33,17 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     .classed('y', true)
     .classed('axis', true);
 
+
+  function setXFormat(xFormat) {
+    xAxis.tickFormat(xFormat);
+    return this;
+  }
+
+  function setYFormat(yFormat) {
+    yAxis.tickFormat(yFormat);
+    return this;
+  }
+
   function xFormat(d) {
     return timeFormat(data[d].date);
   }
@@ -45,12 +57,15 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     idAccess = idAccess || function(d, i) {return i;};
 
     data = _data.map(function(d, i) {
-      return $.extend({x: i % columns, y: Math.floor(i / columns)}, d);
+      return $.extend({
+        x: i % columns,
+        y: Math.floor(i / columns)}, d);
     });
 
     var dates = data
       .filter(function(d, i) {return i % columns == 0;})
       .map(function(d) {return normalizeDate(d.date);});
+
     yAxis.tickValues(dates);
 
     x.domain(d3.range(d3.max(data, function(d) {return d.x;}) + 1));
@@ -104,7 +119,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     if (!_width || !_height || !cells) {return;}
     width  = _width  - (margin.left + margin.right );
     height = _height - (margin.top  + margin.bottom);
-    x.rangeBands([margin.left, width + margin.left], 0.02);
+    x.rangeBands([margin.left, width + margin.left], xSpaceing);
     y.rangeBands([height + margin.top, margin.top], 0.1);
     yTimeScale.range([height + margin.top, margin.top]);
 
@@ -136,6 +151,8 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
   }
 
   var exports = {
+    setXFormat: setXFormat,
+    setYFormat: setYFormat,
     setData: setData,
     color: color,
     visualize: visualize
