@@ -20,7 +20,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _
   var cells = null;
   var cellsEnter = null;
   var data = null;
-  var timeFormat = d3.time.format('%H:%M');
+  var timeFormat = d3.time.format('%H');
   var dateFormat = d3.time.format('%e %b');
 
   var xAxisG = gSelection
