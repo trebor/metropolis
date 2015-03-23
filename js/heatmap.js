@@ -2,7 +2,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
 
   var X_AXIS_CORRECT = 5;
   var Y_AXIS_CORRECT_X = 12;
-  var Y_AXIS_CORRECT_Y = 6;
+  var Y_AXIS_CORRECT_Y = -8;
   var valueAccess = null;
   var width = null;
   var height = null;
@@ -105,8 +105,8 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection) {
     width  = _width  - (margin.left + margin.right );
     height = _height - (margin.top  + margin.bottom);
     x.rangeBands([margin.left, width + margin.left], 0.02);
-    y.rangeBands([margin.top, height + margin.top], 0.1);
-    yTimeScale.range([margin.top, height + margin.top], 0.1);
+    y.rangeBands([height + margin.top, margin.top], 0.1);
+    yTimeScale.range([height + margin.top, margin.top]);
 
     cellsEnter
       .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
