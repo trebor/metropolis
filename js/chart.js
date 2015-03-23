@@ -40,6 +40,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
 	  '上海市': 6
   };
 
+
+  
   function initialize() {
 
     baseChart.initialize();
@@ -101,6 +103,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
         map: new HeatMap(group),
         data: cityMap[name]
       };
+
+	  city.map.setYFormat(DATE_MAP[name]);
 
       return city;
     });

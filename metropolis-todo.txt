@@ -4,7 +4,6 @@ TO-DO
 something that adds new data to csv
 something that changes the csv to have empty rows
 outliers
-local date formatting
 ordering them by time zone (possibly w/ offsets)
 
 
@@ -15,3 +14,4 @@ DONE
 * looping
 * legend
 * about page
+* local date formatting
