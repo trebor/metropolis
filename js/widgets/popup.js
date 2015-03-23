@@ -82,9 +82,9 @@ define(function (require) {
 			$(this).removeClass('hover');
 		});
 		$('.popup-cont').on('click', function(e) {
-			e.preventDefault();
 
 			if (!popupDialog.hasClass('hover')) {
+				e.preventDefault();
 				self.close();
 			}
 		});
