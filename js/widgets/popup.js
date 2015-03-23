@@ -78,7 +78,6 @@ define(function (require) {
 			self.close();
 		})
 		popupDialog.hover(function(e) {
-			console.log('hover')
 			$(this).addClass('hover');
 		}, function(e) {
 			$(this).removeClass('hover');
@@ -93,9 +92,7 @@ define(function (require) {
 	
 		
 		$(document).keyup(function(e) {
-			
-			console.log(e.keyCode)
-			
+						
 			//close dialog on escape and return and space
 			if (self.openFlag) {
 				if (e.keyCode == 13 || e.keyCode == 27 || e.keyCode == 32) {
@@ -103,7 +100,6 @@ define(function (require) {
 				}		
 			}	
 		});
-		//$('.modal', this.domNode).modal('show');
 	
 	};
 
