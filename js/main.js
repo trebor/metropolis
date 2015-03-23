@@ -1,3 +1,4 @@
+<<<<<<< Local Changes
 requirejs.config({
   baseUrl: 'bower_components',
   paths: {
@@ -59,7 +60,7 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
 	    }
     }
   });
-  
+
   //init About Popup  
   var aboutTemplate = new Nunjucks.Template(aboutHTML);
   var popup = new Popup();
@@ -71,3 +72,5 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
   })
   
 });
+=======
+>>>>>>> External Changes
