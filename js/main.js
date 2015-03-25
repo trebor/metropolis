@@ -42,6 +42,7 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
   var model = new Model().on('data', function(data) {
 
     chart.setData(data);
+    chart.setModel(model);
 
     setInterval(updateFrame, FRAME_DELAY);
     updateFrame();

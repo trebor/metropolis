@@ -10,6 +10,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var LEGEND_HEIGHT = 40;
   var LEGEND_WIDTH = LEGEND_HEIGHT * LEGEND_COUNT;
 
+  var model = null;
   var sensorMap = null;
   var cities = null;
   var localEvents = [];
@@ -176,11 +177,15 @@ var module = function($chartNode, customOptions, extendedEvents) {
     legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
   }
 
+  function setModel(_model) {
+    model = _model;
+  }
 
   // exports
 
   var exports = {
     setData: setData,
+    setModel: setModel,
     setFrame: setFrame
   };
 
