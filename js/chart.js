@@ -159,7 +159,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
       city.xAxis.tickValues(d3.range(24));
       city.yAxis.tickValues(yAxisValues);
 
-      var rowFormat = DATE_MAP[city.name];
       var oneWeek = model.oneWeek(city.name, date);
 
       city.map
