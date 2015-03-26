@@ -27,7 +27,7 @@ body {
 
 .type-title {
 	fill: #999;
-	font-size: 36px;
+	font-size: 24px;
 }
 
 .city-title {
@@ -63,8 +63,8 @@ body {
 
 .header {
 	position: absolute;
-	top: 30px;
-	right: 27px;
+	top: 15px;
+	right: 20px;
 	width: 96px;
 	height: 22px;
 	text-align: right;
@@ -74,6 +74,7 @@ body {
 	text-decoration: none;
 	opacity: 0.5;
 }
+
 .header .about-link:hover {
 	color: #B6B6B4;
 	text-decoration: underline;
@@ -88,9 +89,8 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	
-	/* position: relative;*/
 }
+
 .popup-content {
 	background: white;
 	min-width: 250px;

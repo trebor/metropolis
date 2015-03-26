@@ -5,7 +5,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
   var ROW_COUNT = 7;
   var COL_COUNT = 24;
   var LEGEND_COUNT = 5;
-  var LEGEND_HEIGHT = 40;
+  var LEGEND_HEIGHT = 30;
   var LEGEND_WIDTH = LEGEND_HEIGHT * LEGEND_COUNT;
 
   var model = null;
@@ -103,6 +103,8 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
       setSensorTitle(sensorPack);
       return sensorPack;
     });
+
+    baseChart.setDimensions();
   }
 
   function sensorTitle(sensor) {
@@ -120,7 +122,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
     sensor.title = sensor.group.append('text')
       .classed('type-title', true)
       .attr('text-anchor', 'middle')
-      .attr('y', margin.top / -2)
+      .attr('y', margin.top * -0.4)
       .attr('opacity', 0)
       .attr('dy', '-.2em');
 
@@ -170,6 +172,19 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
     height = dimensions.height - (margin.top + margin.bottom);
     cityScale.rangeBands([0, height], 0.02, 0);
     sensorScale.rangeBands([0, width], 0.02, 0);
+
+    if (!sensors) {return;}
+
+    sensors.forEach(function(sensor) {
+      sensor.title
+        .attr('x', sensorScale.rangeBand() / 2);
+
+      var legendPos = [(sensorScale.rangeBand() - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT - 10];
+
+      sensor.legendG.attr('transform', 'translate(' + legendPos + ')');
+      sensor.legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
+    });
+
     visualize();
   }
 
@@ -189,16 +204,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
           .attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
         city.map.visualize(sensorScale.rangeBand(), cityScale.rangeBand());
       });
-
-      sensor.title
-        .attr('x', sensorScale.rangeBand() / 2);
-
-      sensor.legendG
-        .attr('transform', 'translate(' + [(sensorScale.rangeBand() - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
-
-      sensor.legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
     });
-
   }
 
   function setModel(_model) {
