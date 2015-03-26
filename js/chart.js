@@ -22,7 +22,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
   baseChart.setOptions(customOptions);
   baseChart.on('chartResize', onResize);
 
-  var margin = {top: 130, right: 10, bottom: 10, left: 10};
+  var margin = {top: 130, right: 20, bottom: 20, left: 20};
   var cityScale = d3.scale.ordinal();
   var sensorScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
@@ -61,7 +61,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
     cityScale.domain(cityNames);
     sensorScale.domain(SENSORS);
 
-    sensors = SENSORS.map(function(sensor) {
+    sensors = SENSORS.map(function(sensor, i) {
 
       var extent = d3.extent(data, function(d) {return d[sensor];});
       var color = d3.scale.linear().range(['white', colorScale(sensor)]).domain(extent);
@@ -72,18 +72,21 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
         var details = CITY_DETAILS[name];
         var yFormat = function(d) {return details.format(new Date(d));};
 
-        group.append('text')
-          .classed('city-title', true).text(name)
-          .attr('dy', '.9em');
+        if (i == 0) {
+          group.append('text')
+            .classed('city-title', true).text(name)
+            .attr('dy', '.9em');
+        }
 
         var hours = d3.range(COL_COUNT);
         var xScale = d3.scale.ordinal().domain(hours);
         var yScale = d3.scale.ordinal();
 
+        var options = {margin: {top: 40, bottom: 0, left: 45, right: 0}};
         var city = {
           name: name,
           group: group,
-          map: new HeatMap(group),
+          map: new HeatMap(group, options),
           data: cityMap[name],
           xAxis: d3.svg.axis().scale(xScale).orient('top' ).tickValues(hours),
           yAxis: d3.svg.axis().scale(yScale).orient('left').tickPadding(10).tickFormat(yFormat)
@@ -171,7 +174,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
     width = dimensions.width - (margin.left + margin.right);
     height = dimensions.height - (margin.top + margin.bottom);
     cityScale.rangeBands([0, height], 0.02, 0);
-    sensorScale.rangeBands([0, width], 0.02, 0);
+    sensorScale.rangeBands([0, width], 0, 0);
 
     if (!sensors) {return;}
 

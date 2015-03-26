@@ -44,7 +44,9 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
     chart.setData(data);
     chart.setModel(model);
     minDate = model.minDate();
-    maxDate = new Date(model.maxDate().getTime() - MS_INA_DAY * 7);
+    maxDate = new Date(model.maxDate().getTime() - MS_INA_DAY * 14);
+    console.log("maxDate", maxDate);
+    console.log("model.maxDate()", model.maxDate());
 
     updateFrame();
     setInterval(updateFrame, FRAME_DELAY);

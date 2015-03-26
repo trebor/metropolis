@@ -102,7 +102,7 @@ var MS_INA_DAY    = MS_INA_HOUR   * 24;
 var FRAME_DELAY = 5000;
 var TRANSITION_DURATION = 2500;
 // var FRAME_DELAY = 500;
-// var TRANSITION_DURATION = 250;
+// var TRANSITION_DURATION = 0;
 
 // define data model module
 
