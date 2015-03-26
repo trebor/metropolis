@@ -3,7 +3,7 @@ define(['jquery', 'd3', 'heatMap'], function($, d3, Heatmap) {return function(gS
   var margin = {top: 2, bottom: 0, left: 0, right: 0};
   var keys = null;
 
-  var heatMap = new Heatmap(gSelection, margin, .2);
+  var heatMap = new Heatmap(gSelection, {margin: margin, xSpaceing: 0.2});
 
   function setData(extent, count) {
     var scale = d3.scale.linear().domain([0, count - 1]).range(extent);

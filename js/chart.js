@@ -7,7 +7,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var ROW_COUNT = 7;
   var COL_COUNT = 24;
   var LEGEND_COUNT = 5;
-  var LEGEND_HEIGHT = 80;
+  var LEGEND_HEIGHT = 40;
   var LEGEND_WIDTH = LEGEND_HEIGHT * LEGEND_COUNT;
 
   var model = null;

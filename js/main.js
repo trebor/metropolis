@@ -57,7 +57,7 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
         currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
       }
 
-      if (currentDate == maxDate) {
+      if (currentDate.getTime() >= maxDate.getTime()) {
 		    frameCount = 0;
 	    }
     }
