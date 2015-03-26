@@ -30,7 +30,6 @@ requirejs.config({
 });
 
 define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/about.html', 'domReady!'], function ($, Chart, Model, Popup, Nunjucks, aboutHTML, doc) {
-  var currentSensorIdx = 0;
   var frameCount = 0;
   var minDate = null;
   var maxDate = null;
@@ -51,12 +50,8 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
 
     function updateFrame() {
       var currentDate = new Date(minDate.getTime() + frameCount * MS_INA_DAY);
-      chart.setDate(SENSORS[currentSensorIdx], currentDate);
+      chart.setFrame(currentDate);
       ++frameCount;
-      if (frameCount % 7 == 0) {
-        currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
-      }
-
       if (currentDate.getTime() >= maxDate.getTime()) {
 		    frameCount = 0;
 	    }

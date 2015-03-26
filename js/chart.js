@@ -143,7 +143,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
   var timeFormat = d3.time.format('%H');
   var dateFormat = d3.time.format('%e %b');
 
-  function setDate(sensor, date) {
+  function setFrame(date) {
     sensors.forEach(function(sensor){
         sensor.cities.forEach(function(city) {
           var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
@@ -219,7 +219,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
   var exports = {
     setData: setData,
     setModel: setModel,
-    setDate: setDate
+    setFrame: setFrame
   };
 
   initialize(CITIES);
