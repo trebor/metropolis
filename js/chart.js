@@ -100,13 +100,17 @@ var module = function($chartNode, customOptions, extendedEvents) {
         .classed('city-title', true).text(name)
         .attr('dy', '.9em');
 
+      var hours = d3.range(COL_COUNT);
+      var xScale = d3.scale.ordinal().domain(hours);
+      var yScale = d3.scale.ordinal();
+
       var city = {
         name: name,
         group: group,
         map: new HeatMap(group),
         data: cityMap[name],
-        xAxis: d3.svg.axis().scale(d3.scale.ordinal()).orient('top'),
-        yAxis: d3.svg.axis().scale(d3.scale.ordinal()).tickPadding(10).orient('left').tickFormat(yFormat)
+        xAxis: d3.svg.axis().scale(xScale).orient('top').tickValues(hours),
+        yAxis: d3.svg.axis().scale(yScale).tickPadding(10).orient('left').tickFormat(yFormat)
       };
 
       return city;
@@ -150,13 +154,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
   function setDate(sensor, date) {
     setSensor(sensor);
     cities.forEach(function(city) {
-
       var yAxisValues = d3.range(7).map(function(d, i) {return date.getTime() + i * MS_INA_DAY;});
-
-      city.xAxis.scale().domain(d3.range(24));
       city.yAxis.scale().domain(yAxisValues);
-
-      city.xAxis.tickValues(d3.range(24));
       city.yAxis.tickValues(yAxisValues);
 
       var oneWeek = model.oneWeek(city.name, date);
