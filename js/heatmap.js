@@ -32,11 +32,13 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
   var xAxisG = gSelection
     .append('g')
+    .attr('transform', 'translate(0, 0)')
     .classed('x', true)
     .classed('axis', true);
 
   var yAxisG = gSelection
     .append('g')
+    .attr('transform', 'translate(0, 0)')
     .classed('y', true)
     .classed('axis', true);
 
@@ -115,7 +117,6 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
     if (xAxis) {
       xAxis.scale().rangeBands([margin.left, margin.left + width], xSpaceing);
-
       xAxisG
         .transition()
         .duration(TRANSITION_DURATION)

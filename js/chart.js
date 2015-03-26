@@ -7,7 +7,7 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var ROW_COUNT = 7;
   var COL_COUNT = 24;
   var LEGEND_COUNT = 5;
-  var LEGEND_HEIGHT = 40;
+  var LEGEND_HEIGHT = 80;
   var LEGEND_WIDTH = LEGEND_HEIGHT * LEGEND_COUNT;
 
   var model = null;
@@ -50,8 +50,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    // legendG = svg.append('g').classed('legend', true);
-    // legend = new Legend(legendG);
+    legendG = svg.append('g').classed('legend', true);
+    legend = new Legend(legendG);
 
     svg.append('text')
       .classed('type-title', true)
@@ -87,8 +87,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
       return cityOrder[a] - cityOrder[b];
     });
 
-    // cityNames = [cityNames[0]];
-
     cityScale.domain(cityNames);
 
     cities = cityNames.map(function(name) {
@@ -109,8 +107,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
         group: group,
         map: new HeatMap(group),
         data: cityMap[name],
-        xAxis: d3.svg.axis().scale(xScale).orient('top').tickValues(hours),
-        yAxis: d3.svg.axis().scale(yScale).tickPadding(10).orient('left').tickFormat(yFormat)
+        xAxis: d3.svg.axis().scale(xScale).orient('top' ).tickValues(hours),
+        yAxis: d3.svg.axis().scale(yScale).orient('left').tickPadding(10).tickFormat(yFormat)
       };
 
       return city;
@@ -138,9 +136,9 @@ var module = function($chartNode, customOptions, extendedEvents) {
   }
 
   function setLegand(color, extent) {
-    // legend
-    //   .color(color)
-    //   .setData(extent, LEGEND_COUNT);
+    legend
+      .color(color)
+      .setData(extent, LEGEND_COUNT);
   }
 
   function setSensor(sensor) {
@@ -154,22 +152,18 @@ var module = function($chartNode, customOptions, extendedEvents) {
   function setDate(sensor, date) {
     setSensor(sensor);
     cities.forEach(function(city) {
-      var yAxisValues = d3.range(7).map(function(d, i) {return date.getTime() + i * MS_INA_DAY;});
+      var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
+        return date.getTime() + i * MS_INA_DAY;
+      });
       city.yAxis.scale().domain(yAxisValues);
       city.yAxis.tickValues(yAxisValues);
-
-      var oneWeek = model.oneWeek(city.name, date);
 
       city.map
         .color(function(d) {
           var value = d[sensor];
           return  value !== undefined && !isNaN(value) ? sensorMap[sensor].color(value) : '#666';
         })
-        .setData(oneWeek, COL_COUNT, idAccess, city.xAxis, city.yAxis);
-
-      function xAxisFormat(time) {
-        return timeFormat(new Date(time));
-      }
+        .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, city.xAxis, city.yAxis);
     });
 
     visualize();
@@ -178,19 +172,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
 
   function idAccess(d) {
     return d.id;
-  }
-
-  function setFrame(sensor, offset) {
-    setSensor(sensor);
-    cities.forEach(function(city) {
-      city.map
-        .color(function(d) {return sensorMap[sensor].color(d[sensor]);})
-        .setData(
-          city.data.slice(offset, offset + ROW_COUNT * COL_COUNT),
-          COL_COUNT,
-          function(d) {return d.id;});
-    });
-    visualize();
   }
 
   function onResize(_dimensions) {
@@ -216,10 +197,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
       city.map.visualize(width, cityScale.rangeBand());
     });
 
-    // legendG
-    //   .attr('transform', 'translate(' + [(width - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
+    legendG
+      .attr('transform', 'translate(' + [(width - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
 
-    // legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
+    legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
   }
 
   function setModel(_model) {
@@ -231,7 +212,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var exports = {
     setData: setData,
     setModel: setModel,
-    setFrame: setFrame,
     setDate: setDate
   };
 
