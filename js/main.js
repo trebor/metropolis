@@ -8,7 +8,7 @@ requirejs.config({
     crossfilter: 'crossfilter/crossfilter.min',
     jquery:      'jquery/dist/jquery.min',
     underscore:  'underscore/underscore-min',
-    lodash:      'lodash/dist/lodash.min',
+    lodash:      'lodash/lodash.min',
     nunjucks:    'nunjucks/browser/nunjucks.min',
     domReady:    'requirejs-domready/domReady',
     text:        'requirejs-text/text',
@@ -32,36 +32,38 @@ requirejs.config({
 define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/about.html', 'domReady!'], function ($, Chart, Model, Popup, Nunjucks, aboutHTML, doc) {
   var currentSensorIdx = 0;
   var frameCount = 0;
-  //to-do: change this arbitrary number to react to complete data sets
-  //		when the data sets are complete
-  var maxIndex = 1416;
-  var minIndex = 24;
-  var timeIndex = minIndex;
+  var minDate = null;
+  var maxDate = null;
 
   var chart = new Chart($('.chart'));
-  var model = new Model().on('data', function(data) {
+  var model = new Model();
 
+  model.on('data', onData);
+
+  function onData(data) {
     chart.setData(data);
     chart.setModel(model);
+    minDate = model.minDate();
+    maxDate = new Date(model.maxDate().getTime() - MS_INA_DAY * 7);
 
-    setInterval(updateFrame, FRAME_DELAY);
     updateFrame();
+    setInterval(updateFrame, FRAME_DELAY);
 
     function updateFrame() {
-      chart.setFrame(SENSORS[currentSensorIdx], timeIndex);
+      var currentDate = new Date(minDate.getTime() + frameCount * MS_INA_DAY);
+      chart.setDate(SENSORS[currentSensorIdx], currentDate);
       ++frameCount;
       if (frameCount % 7 == 0) {
         currentSensorIdx = (currentSensorIdx + 1) %  SENSORS.length;
       }
 
-      timeIndex += 24;
-	    if (timeIndex > maxIndex) {
-		    timeIndex = minIndex;
+      if (currentDate == maxDate) {
+		    frameCount = 0;
 	    }
     }
-  });
+  }
 
-  //init About Popup  
+  //init About Popup
   var aboutTemplate = new Nunjucks.Template(aboutHTML);
   var popup = new Popup();
   popup.init({'body': aboutTemplate.render(), 'title': 'About'});

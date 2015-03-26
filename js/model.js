@@ -28,6 +28,16 @@ var SENSOR_DETAILS = {
   'dust':           {title: 'Dust',        unit: 'pcs/238mL'}
 };
 
+var CITY_DETAILS = {
+	'San Francisco':      {format: yFormatEn,     tz: -8  },
+	'Boston':             {format: yFormatEn,     tz: -5  },
+	'Rio de Janeiro':     {format: yFormatPtBr,   tz: -3  },
+	'Genève':             {format: yFormatFr,     tz:  1  },
+	'ಬೆಂಗಳೂರು':            {format: yFormatKan,    tz:  5.5},
+	'Republik Singapura': {format: yFormatMs,     tz:  7  },
+	'上海市':              {format: yFormatZhHans, tz:  8  }
+};
+
 function yFormatEn(d) {
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   return d.getDate()+' '+months[d.getMonth()];
@@ -52,16 +62,6 @@ function yFormatMs(d) {
   var months = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogos', 'Sep', 'Okt', 'Nov', 'Dis'];
   return d.getDate()+' '+months[d.getMonth()];
 }
-
-var DATE_MAP = {
-	  'San Francisco': yFormatEn,
-	  'Boston': yFormatEn,
-	  'Rio de Janeiro': yFormatPtBr,
-	  'Genève': yFormatFr,
-	  'ಬೆಂಗಳೂರು': yFormatKan,
-	  'Republik Singapura': yFormatMs,
-	  '上海市': yFormatZhHans
-  };
 
 //kannada ex: 18 ಛ
 // January ಛ
@@ -100,16 +100,18 @@ var MS_INA_HOUR   = MS_INA_MINUTE * 60;
 var MS_INA_DAY    = MS_INA_HOUR   * 24;
 
 var FRAME_DELAY = 5000;
+//var FRAME_DELAY = 10000;
 var TRANSITION_DURATION = 2500;
 // var FRAME_DELAY = 100;
 // var TRANSITION_DURATION = 100;
 
 // define data model module
 
-define(['d3'], function(d3) {return function() {
+define(['jquery', 'd3'], function($, d3) {return function() {
 
-  var _model = null;
-  var _dateExtent = null;
+  var model = null;
+  var dateExtent = null;
+  var nextNullId = -1;
 
   var dispatcher = d3.dispatch(['data']);
 
@@ -124,19 +126,19 @@ define(['d3'], function(d3) {return function() {
 
   function gotData(data) {
 
-    _model = d3.nest()
+    model = d3.nest()
       .key(function(d) { return d.city_name; })
       .key(function(d) { return normalizeDate(d.date); })
       .rollup(function(d) {
+        var date = normalizeDate(d[0].date);
         return d.reduce(function(acc, current) {
           acc[current.date.getHours()] = current;
           return acc;
-        }, createNullDay());
+        }, createNullDay(date));
       })
       .map(data);
 
-    _dateExtent = d3.extent(data, function(d) {return d.date;});
-
+    dateExtent = d3.extent(data, function(d) {return d.date;}).map(normalizeDate);
     dispatcher.data(data);
   }
 
@@ -145,9 +147,9 @@ define(['d3'], function(d3) {return function() {
   }
 
   function oneDay(cityName, date) {
-    var city = _model[cityName];
-    if (!city) {return createNullDay();}
-    return city[date] || createNullDay();
+    var city = model[cityName];
+    var day = city ? (city[date] || createNullDay(date)) : createNullDay(date);
+    return day.map(function(d) {d.id = d.date.getTime(); return d;});
   }
 
   function oneWeek(cityName, date) {
@@ -157,17 +159,26 @@ define(['d3'], function(d3) {return function() {
     }, []);
   }
 
-  function createNullDay() {
-    return d3.range(24).map(function(d) {return null;});
+  function createNullDay(date) {
+    var startTime = date.getTime();
+    return d3.range(24).map(function(d, i) {
+      return {date: new Date(startTime + i * MS_INA_HOUR)};
+    });
   }
 
-  function dateExtent() {
+  function minDate() {
+    return dateExtent[0];
+  }
+
+  function maxDate() {
+    return dateExtent[1];
   }
 
   var exports = {
     oneDay: oneDay,
     oneWeek: oneWeek,
-    dateExtent: dateExtent
+    minDate: minDate,
+    maxDate: maxDate
   };
 
   return $.extend(exports, dispatcher);

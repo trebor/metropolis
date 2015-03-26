@@ -1,27 +1,34 @@
-define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _xSpaceing) {
+define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
-  var X_AXIS_CORRECT = 5;
-  var Y_AXIS_CORRECT_X = 12;
-  var Y_AXIS_CORRECT_Y = -8;
+  // constants
+
+  // globals
+
   var valueAccess = null;
   var width = null;
   var height = null;
-  var x = d3.scale.ordinal();
-  var y = d3.scale.ordinal();
-  var xSpaceing = _xSpaceing || 0.02;
-  var yTimeScale = d3.time.scale();
-  var xAxis = d3.svg.axis().scale(x).orient('top').tickFormat(xFormat);
-  var yAxis = d3.svg.axis()
-    .scale(yTimeScale)
-    .tickPadding(10)
-    .orient('left').tickFormat(yFormat);
-  var colorFn = null;
-  var margin = _margin || {top: 37, bottom: 10, left: 45, right: 15};
   var cells = null;
   var cellsEnter = null;
   var data = null;
-  var timeFormat = d3.time.format('%H');
-  var dateFormat = d3.time.format('%e %b');
+  var colorFn = null;
+  var columns = null;
+
+  // pre initialized globals
+
+  options = options || {};
+
+  var x = d3.scale.ordinal();
+  var y = d3.scale.ordinal();
+  var xSpaceing = options.xSpaceing || 0.02;
+  var ySpaceing = options.ySpaceing || 0.1;
+  var xAxisCorrectX = 0;
+  var xAxisCorrectY = 5;
+  var yAxisCorrectX = 12;
+  var yAxisCorrectY = 0;
+  var xAxis = null;
+  var yAxis = null;
+
+  var margin = options.margin || {top: 37, bottom: 10, left: 45, right: 15};
 
   var xAxisG = gSelection
     .append('g')
@@ -33,44 +40,22 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _
     .classed('y', true)
     .classed('axis', true);
 
-
-  function setXFormat(xFormat) {
-    xAxis.tickFormat(xFormat);
-    return this;
+  function indexToX(i) {
+    return i % columns;
+  }
+  function indexToY(i) {
+    return Math.floor(i / columns);
   }
 
-  function setYFormat(yFormat) {
-    yAxis.tickFormat(yFormat);
-    return this;
-  }
+  function setData(data, _columns, idAccess, _xAxis, _yAxis) {
+    columns = _columns;
+    xAxis = _xAxis;
+    yAxis = _yAxis;
 
-  function xFormat(d) {
-    return timeFormat(data[d].date);
-  }
-
-  function yFormat(d) {
-    return dateFormat(d);
-  }
-
-  function setData(_data, columns, idAccess) {
-
-    idAccess = idAccess || function(d, i) {return i;};
-
-    data = _data.map(function(d, i) {
-      return $.extend({
-        x: i % columns,
-        y: Math.floor(i / columns)}, d);
-    });
-
-    var dates = data
-      .filter(function(d, i) {return i % columns == 0;})
-      .map(function(d) {return normalizeDate(d.date);});
-
-    yAxis.tickValues(dates);
-
-    x.domain(d3.range(d3.max(data, function(d) {return d.x;}) + 1));
-    y.domain(d3.range(d3.max(data, function(d) {return d.y;}) + 1));
-    yTimeScale.domain([normalizeDate(data[0].date), normalizeDate(data[data.length - 1].date)]);
+    var xValues = d3.range(indexToX(columns- 1) + 1);
+    var yValues = d3.range(indexToY(data.length - 1) + 1);
+    x.domain(xValues);
+    y.domain(yValues);
 
     cells = gSelection.selectAll('rect.cell').data(data, idAccess);
 
@@ -84,30 +69,18 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _
       .attr('height', 0)
       .attr('fill', 'white');
 
+    cellsEnter.append('title')
+      .text(function(d) {return d.date ? d.date : d.id;});
+
     cells
       .exit()
       .transition()
       .duration(TRANSITION_DURATION)
-      .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
-      .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;})
-      .attr('width', 0)
+      .attr('y', function(d, i) {return y(indexToY(i)) + y.rangeBand();})
       .attr('height', 0)
       .remove();
 
-    visualize();
-
     return this;
-  }
-
-  function normalizeDate(date) {
-    return new Date(date.getYear() + 1900, date.getMonth(), date.getDate());
-  }
-
-  function dayOfYear(date) {
-    var start = new Date(date.getFullYear(), 0, 0);
-    var diff = date - start;
-    var oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay);
   }
 
   function color(_colorFn) {
@@ -119,40 +92,50 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, _margin, _
     if (!_width || !_height || !cells) {return;}
     width  = _width  - (margin.left + margin.right );
     height = _height - (margin.top  + margin.bottom);
-    x.rangeBands([margin.left, width + margin.left], xSpaceing);
-    y.rangeBands([height + margin.top, margin.top], 0.1);
-    yTimeScale.range([height + margin.top, margin.top]);
+    x.rangeBands([margin.left, margin.left + width], xSpaceing);
+    y.rangeBands([margin.top  + height, margin.top], ySpaceing);
+
+    var xBand = x.rangeBand();
+    var yBand = y.rangeBand();
 
     cellsEnter
-      .attr('x', function(d) {return x(d.x) + x.rangeBand() / 2;})
-      .attr('y', function(d) {return y(d.y) + y.rangeBand() / 2;});
+      .attr('x', function(d, i) {return x(indexToX(i));})
+      .attr('y', function(d, i) {return y(indexToY(i));})
+      .attr('width', function(d) {return xBand;})
+      .attr('height', 0);
 
     cells
       .transition()
       .duration(TRANSITION_DURATION)
-      .attr('x', function(d) {return x(d.x);})
-      .attr('y', function(d) {return y(d.y);})
-      .attr('width', function(d) {return x.rangeBand();})
-      .attr('height', function(d) {return y.rangeBand();})
+      .attr('x', function(d, i) {return x(indexToX(i));})
+      .attr('y', function(d, i) {return y(indexToY(i));})
+      .attr('width', function(d) {return xBand;})
+      .attr('height', function(d) {return yBand;})
       .attr('fill', colorFn);
 
-    xAxisG
-      .transition()
-      .duration(TRANSITION_DURATION)
-      .attr('transform', 'translate(0,' + (margin.top + X_AXIS_CORRECT) + ')')
-      .call(xAxis);
+    if (xAxis) {
+      xAxis.scale().rangeBands([margin.left, margin.left + width], xSpaceing);
 
-    yAxisG
-      .transition()
-      .duration(TRANSITION_DURATION)
-      .attr('transform', 'translate(' + (margin.left + Y_AXIS_CORRECT_X) + ', ' + Y_AXIS_CORRECT_Y + ')')
-      .call(yAxis);
+      xAxisG
+        .transition()
+        .duration(TRANSITION_DURATION)
+        .attr('transform', 'translate(' + [xAxisCorrectX, margin.top + xAxisCorrectY] + ')')
+        .call(xAxis);
+    }
 
+    if (yAxis) {
+      yAxis.scale().rangeBands([margin.top  + height, margin.top], ySpaceing);
+
+      yAxisG
+        .transition()
+        .duration(TRANSITION_DURATION)
+        .attr('transform',
+              'translate(' + [margin.left + yAxisCorrectX, yAxisCorrectY] + ')')
+        .call(yAxis);
+    }
   }
 
   var exports = {
-    setXFormat: setXFormat,
-    setYFormat: setYFormat,
     setData: setData,
     color: color,
     visualize: visualize

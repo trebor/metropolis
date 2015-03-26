@@ -41,8 +41,6 @@ var module = function($chartNode, customOptions, extendedEvents) {
 	  '上海市': 6
   };
 
-
-  
   function initialize() {
 
     baseChart.initialize();
@@ -52,8 +50,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    legendG = svg.append('g').classed('legend', true);
-    legend = new Legend(legendG);
+    // legendG = svg.append('g').classed('legend', true);
+    // legend = new Legend(legendG);
 
     svg.append('text')
       .classed('type-title', true)
@@ -89,10 +87,14 @@ var module = function($chartNode, customOptions, extendedEvents) {
       return cityOrder[a] - cityOrder[b];
     });
 
+    // cityNames = [cityNames[0]];
+
     cityScale.domain(cityNames);
 
     cities = cityNames.map(function(name) {
       var group = svg.append('g').classed(name, true);
+      var details = CITY_DETAILS[name];
+      var yFormat = function(d) {return details.format(new Date(d));};
 
       group.append('text')
         .classed('city-title', true).text(name)
@@ -102,10 +104,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
         name: name,
         group: group,
         map: new HeatMap(group),
-        data: cityMap[name]
+        data: cityMap[name],
+        xAxis: d3.svg.axis().scale(d3.scale.ordinal()).orient('top'),
+        yAxis: d3.svg.axis().scale(d3.scale.ordinal()).tickPadding(10).orient('left').tickFormat(yFormat)
       };
-
-	  city.map.setYFormat(DATE_MAP[name]);
 
       return city;
     });
@@ -117,26 +119,71 @@ var module = function($chartNode, customOptions, extendedEvents) {
     return SENSOR_DETAILS[sensor].title + '  ' + SENSOR_DETAILS[sensor].unit + '';
   }
 
-  function setFrame(sensor, offset) {
-
-    var sensorNameStr = sensorName(sensor);
-
-    if (d3.select('.type-title').text() != sensorNameStr) {
+  function setTitle(title) {
+    if (d3.select('.type-title').text() != title) {
       d3.select('.type-title')
         .transition()
         .attr('opacity', 0)
         .transition()
         .duration(0)
-        .text(sensorNameStr)
+        .text(title)
         .transition()
         .duration(TRANSITION_DURATION / 3)
         .attr('opacity', 1);
     }
+  }
 
-    legend
-      .color(sensorMap[sensor].color)
-      .setData(sensorMap[sensor].extent, LEGEND_COUNT);
+  function setLegand(color, extent) {
+    // legend
+    //   .color(color)
+    //   .setData(extent, LEGEND_COUNT);
+  }
 
+  function setSensor(sensor) {
+    setTitle(sensorName(sensor));
+    setLegand(sensorMap[sensor].color, sensorMap[sensor].extent);
+  }
+
+  var timeFormat = d3.time.format('%H');
+  var dateFormat = d3.time.format('%e %b');
+
+  function setDate(sensor, date) {
+    setSensor(sensor);
+    cities.forEach(function(city) {
+
+      var yAxisValues = d3.range(7).map(function(d, i) {return date.getTime() + i * MS_INA_DAY;});
+
+      city.xAxis.scale().domain(d3.range(24));
+      city.yAxis.scale().domain(yAxisValues);
+
+      city.xAxis.tickValues(d3.range(24));
+      city.yAxis.tickValues(yAxisValues);
+
+      var rowFormat = DATE_MAP[city.name];
+      var oneWeek = model.oneWeek(city.name, date);
+
+      city.map
+        .color(function(d) {
+          var value = d[sensor];
+          return  value !== undefined && !isNaN(value) ? sensorMap[sensor].color(value) : '#666';
+        })
+        .setData(oneWeek, COL_COUNT, idAccess, city.xAxis, city.yAxis);
+
+      function xAxisFormat(time) {
+        return timeFormat(new Date(time));
+      }
+    });
+
+    visualize();
+  }
+
+
+  function idAccess(d) {
+    return d.id;
+  }
+
+  function setFrame(sensor, offset) {
+    setSensor(sensor);
     cities.forEach(function(city) {
       city.map
         .color(function(d) {return sensorMap[sensor].color(d[sensor]);})
@@ -171,10 +218,10 @@ var module = function($chartNode, customOptions, extendedEvents) {
       city.map.visualize(width, cityScale.rangeBand());
     });
 
-    legendG
-      .attr('transform', 'translate(' + [(width - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
+    // legendG
+    //   .attr('transform', 'translate(' + [(width - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT + 0] + ')');
 
-    legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
+    // legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
   }
 
   function setModel(_model) {
@@ -186,7 +233,8 @@ var module = function($chartNode, customOptions, extendedEvents) {
   var exports = {
     setData: setData,
     setModel: setModel,
-    setFrame: setFrame
+    setFrame: setFrame,
+    setDate: setDate
   };
 
   initialize(CITIES);
