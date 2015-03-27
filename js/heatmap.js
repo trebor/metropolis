@@ -1,10 +1,7 @@
 define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
-  // constants
-
   // globals
 
-  var valueAccess = null;
   var width = null;
   var height = null;
   var cells = null;
@@ -17,6 +14,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
   options = options || {};
 
+  var titleFormat = function(d) {return d ? d.toString() : '';};
   var x = d3.scale.ordinal();
   var y = d3.scale.ordinal();
   var xSpaceing = options.xSpaceing || 0.02;
@@ -72,7 +70,7 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
       .attr('fill', 'white');
 
     cellsEnter.append('title')
-      .text(function(d) {return d.date ? d.date : d.id;});
+      .html(titleFormat);
 
     cells
       .exit()
@@ -136,8 +134,14 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
     }
   }
 
+  function setTitleFormat(_titleFormat) {
+    titleFormat = _titleFormat;
+    return this;
+  }
+
   var exports = {
     setData: setData,
+    setTitleFormat: setTitleFormat,
     color: color,
     visualize: visualize
   };
