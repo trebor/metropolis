@@ -191,7 +191,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
       sensor.title
         .attr('x', sensorScale.rangeBand() / 2);
 
-      var legendPos = [(sensorScale.rangeBand() - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT - 10];
+      var legendPos = [(sensorScale.rangeBand() - LEGEND_WIDTH) / 2, -LEGEND_HEIGHT];
 
       sensor.legendG.attr('transform', 'translate(' + legendPos + ')');
       sensor.legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
