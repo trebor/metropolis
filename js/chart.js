@@ -66,7 +66,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
     sensors = SENSORS.map(function(sensor, i) {
 
       var extent = d3.extent(data, function(d) {return d[sensor];});
-      var color = d3.scale.linear().range(['white', colorScale(sensor)]).domain(extent);
+      var color = d3.scale.pow().exponent(1.3).range(['white', colorScale(sensor)]).domain(extent);
       var sensorGroup = svg.append('g').classed(sensor, true);
 
       var cities = cityNames.map(function(name) {
