@@ -82,7 +82,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
         var xScale = d3.scale.ordinal().domain(hours);
         var yScale = d3.scale.ordinal();
 
-        var options = {margin: {top: 40, bottom: 0, left: 45, right: 0}};
+        var options = {margin: {top: 40, bottom: 0, left: 48, right: 0}};
         var city = {
           name: name,
           group: group,
@@ -155,7 +155,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
           city.map
             .color(function(d) {
               var value = d[sensor.name];
-              return  value !== undefined && !isNaN(value) ? sensor.color(value) : '#666';
+              return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
             })
             .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, city.xAxis, city.yAxis);
         });
