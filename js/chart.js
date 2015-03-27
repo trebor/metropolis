@@ -24,6 +24,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
 
   var margin = {top: 130, right: 20, bottom: 20, left: 20};
   var titleTimeFormat = d3.time.format('%e %b %Y %H:00');
+  var valueFormat = d3.format(',.1f');
   var cityScale = d3.scale.ordinal();
   var sensorScale = d3.scale.ordinal();
   var colorScale = d3.scale.category10();
@@ -93,13 +94,14 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
           yAxis: d3.svg.axis().scale(yScale).orient('left').tickPadding(10).tickFormat(yFormat)
         };
 
+
         city.heatmap.setTitleFormat(function(d) {
           var value = d3.round(d[sensor], 1);
 
           return titleTimeFormat(d.date) + '\n'
             + name + '\n'
             + SENSOR_DETAILS[sensor].title + ': ' +
-            (value  ? value + SENSOR_DETAILS[sensor].unit : 'N/A');
+            (value ? valueFormat(value) + SENSOR_DETAILS[sensor].unit : 'N/A');
         });
 
         return city;
