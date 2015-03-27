@@ -86,7 +86,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
         var city = {
           name: name,
           group: group,
-          map: new HeatMap(group, options),
+          heatmap: new HeatMap(group, options),
           data: cityMap[name],
           xAxis: d3.svg.axis().scale(xScale).orient('top' ).tickValues(hours),
           yAxis: d3.svg.axis().scale(yScale).orient('left').tickPadding(10).tickFormat(yFormat)
@@ -152,7 +152,7 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
           city.yAxis.scale().domain(yAxisValues);
           city.yAxis.tickValues(yAxisValues);
 
-          city.map
+          city.heatmap
             .color(function(d) {
               var value = d[sensor.name];
               return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
@@ -188,12 +188,6 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
       sensor.legend.visualize(LEGEND_WIDTH, LEGEND_HEIGHT);
     });
 
-    visualize();
-  }
-
-  function visualize() {
-    if (!svg || !sensors) return;
-
     sensors.forEach(function(sensor) {
       sensor.group
         .transition()
@@ -205,7 +199,19 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
           .transition()
           .duration(TRANSITION_DURATION)
           .attr('transform', 'translate(0, ' + cityScale(city.name) + ')');
-        city.map.visualize(sensorScale.rangeBand(), cityScale.rangeBand());
+        city.heatmap.visualize(sensorScale.rangeBand(), cityScale.rangeBand());
+      });
+    });
+
+    visualize();
+  }
+
+  function visualize() {
+    if (!svg || !sensors) return;
+
+    sensors.forEach(function(sensor) {
+      sensor.cities.forEach(function(city) {
+        city.heatmap.visualize(sensorScale.rangeBand(), cityScale.rangeBand());
       });
     });
   }
