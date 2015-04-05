@@ -153,21 +153,21 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
   }
 
   function setFrame(date) {
-    sensors.forEach(function(sensor){
-        sensor.cities.forEach(function(city) {
-          var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
-            return date.getTime() + i * MS_INA_DAY;
-          });
-          city.yAxis.scale().domain(yAxisValues);
-          city.yAxis.tickValues(yAxisValues);
-
-          city.heatmap
-            .color(function(d) {
-              var value = d[sensor.name];
-              return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
-            })
-            .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, city.xAxis, city.yAxis);
+    sensors.forEach(function(sensor, column){
+      sensor.cities.forEach(function(city, row) {
+        var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
+          return date.getTime() + i * MS_INA_DAY;
         });
+        city.yAxis.scale().domain(yAxisValues);
+        city.yAxis.tickValues(yAxisValues);
+
+        city.heatmap
+          .color(function(d) {
+            var value = d[sensor.name];
+            return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
+          })
+          .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, row == 0 ? city.xAxis : undefined, column == 0 ? city.yAxis : null);
+      });
     });
 
     visualize();
