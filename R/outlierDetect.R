@@ -33,11 +33,10 @@ calc_outliers = function(df, varname, plot=F){
   merged = merge(tmp, anoms, all.x=T)
   merged[[paste(varname,'_outlier', sep='')]] = !is.na(merged$anoms)
 
-  merged_sub = select(merged, measurement_timestamp, one_of(varname), anoms,
+  merged_sub = select(merged, measurement_timestamp, one_of(varname), 
                       one_of(paste(varname, '_outlier', sep='')))
   names(merged_sub) = c('measurement_timestamp',
                     varname,
-                    paste(varname, '_anoms', sep=''),
                     paste(varname, '_outlier', sep=''))
   if(plot){
     rv$plot
