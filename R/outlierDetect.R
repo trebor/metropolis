@@ -1,10 +1,15 @@
+#!/usr/bin/Rscript --vanilla
 library(dplyr)
 library(magrittr)
 library(AnomalyDetection)
 
-setwd('~/workspace/metropolis')
+#setwd('~/workspace/metropolis')
+args = commandArgs(TRUE)
 
-allData = read.csv('data/all_data.csv', header=T, stringsAsFactors=F, na.string="NULL")
+input_file = args[1]
+output_file = args[2]
+
+allData = read.csv(input_file, header=T, stringsAsFactors=F, na.string="NULL")
 
 summByCity = allData %>%
   group_by(city_name, measurement_timestamp) %>%
@@ -64,4 +69,4 @@ for(i in 1:length(cities)){
 
 all_together = Reduce( function(...) rbind(...), final_dfs)
 
-write.table(all_together, "output/all_data_w_outliers.csv", sep=",", row.names=F, col.names=T)
+write.table(all_together, output_file, sep=",", row.names=F, col.names=T)
