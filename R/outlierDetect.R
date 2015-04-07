@@ -1,4 +1,5 @@
-#!/usr/bin/Rscript --vanilla
+#usage: R --vanilla CMD BATCH "--args path/to/input_file path/to/output_file" outlierDetect.R 
+
 library(dplyr)
 library(magrittr)
 library(AnomalyDetection)
