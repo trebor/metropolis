@@ -58,10 +58,13 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
       return cityOrder[a] - cityOrder[b];
     });
 
-    //cityNames = [cityNames[0]];
+    // cityNames = [cityNames[0]];
+    // console.log("cityNames", cityNames);
 
     cityScale.domain(cityNames);
     sensorScale.domain(SENSORS);
+
+    console.log("SENSORS", SENSORS);
 
     sensors = SENSORS.map(function(sensor, i) {
 
@@ -74,11 +77,11 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
         var details = CITY_DETAILS[name];
         var yFormat = function(d) {return details.format(new Date(d));};
 
-        if (i == 0) {
-          group.append('text')
-            .classed('city-title', true).text(name)
-            .attr('dy', '.9em');
-        }
+        // if (i == 0) {
+        //   group.append('text')
+        //     .classed('city-title', true).text(name)
+        //     .attr('dy', '.9em');
+        // }
 
         var hours = d3.range(COL_COUNT);
         var xScale = d3.scale.ordinal().domain(hours);
@@ -154,20 +157,19 @@ define(['d3', 'lodash', 'baseChart', 'heatMap', 'legend'], function(d3, _, BaseC
 
   function setFrame(date) {
     sensors.forEach(function(sensor){
-        sensor.cities.forEach(function(city) {
-          var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
-            return date.getTime() + i * MS_INA_DAY;
-          });
-          city.yAxis.scale().domain(yAxisValues);
-          city.yAxis.tickValues(yAxisValues);
-
-          city.heatmap
-            .color(function(d) {
-              var value = d[sensor.name];
-              return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
-            })
-            .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, city.xAxis, city.yAxis);
+      sensor.cities.forEach(function(city) {
+        var yAxisValues = d3.range(ROW_COUNT).map(function(d, i) {
+          return date.getTime() + i * MS_INA_DAY;
         });
+        city.yAxis.scale().domain(yAxisValues);
+        city.yAxis.tickValues(yAxisValues);
+        city.heatmap
+          .color(function(d) {
+            var value = d[sensor.name];
+            return  value !== undefined && !isNaN(value) ? sensor.color(value) : NO_DATA_COLOR;
+          })
+          .setData(model.oneWeek(city.name, date), COL_COUNT, idAccess, city.xAxis, city.yAxis);
+      });
     });
 
     visualize();

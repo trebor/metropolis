@@ -100,8 +100,8 @@ var MS_INA_HOUR   = MS_INA_MINUTE * 60;
 var MS_INA_DAY    = MS_INA_HOUR   * 24;
 
 var NO_DATA_COLOR = '#ddd';
-var FRAME_DELAY = 5000;
-var TRANSITION_DURATION = 2500;
+var FRAME_DELAY = 0;
+var TRANSITION_DURATION = 0;
 // var FRAME_DELAY = 500;
 // var TRANSITION_DURATION = 0;
 
@@ -112,7 +112,6 @@ define(['jquery', 'd3'], function($, d3) {return function() {
   var model = null;
   var dateExtent = null;
   var nextNullId = -1;
-  var cache = {};
 
   var dispatcher = d3.dispatch(['data']);
 
@@ -156,17 +155,10 @@ define(['jquery', 'd3'], function($, d3) {return function() {
   function oneWeek(cityName, date) {
     var startTime = date.getTime();
     var key = cityName + startTime;
-    var cached = cache[key];
-
-    if (cached) {
-      return cached;
-    }
 
     return d3.range(7).reduce(function(acc, current) {
       return acc.concat(oneDay(cityName, new Date(startTime + current * MS_INA_DAY)));
     }, []);
-
-    cache[key] = cached;
   }
 
   function createNullDay(date) {

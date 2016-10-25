@@ -69,18 +69,23 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
       .attr('height', 0)
       .attr('fill', 'white');
 
-    cellsEnter.append('title')
-      .html(titleFormat);
+    // cellsEnter.append('title')
+    //   .html(titleFormat);
 
     cells
       .exit()
-      .transition()
-      .duration(TRANSITION_DURATION)
-      .attr('y', function(d, i) {return y(indexToY(i)) + y.rangeBand();})
-      .attr('height', 0)
+      // .transition()
+      // .duration(TRANSITION_DURATION)
+      // .attr('y', function(d, i) {return y(indexToY(i)) + y.rangeBand();})
+      // .attr('height', 0)
       .remove();
 
     return this;
+  }
+
+  function unbug(selection) {
+    // console.log("selection.length", selection[0].length);
+    // console.log("selection", selection);
   }
 
   function color(_colorFn) {
@@ -90,48 +95,54 @@ define(["d3", "jquery"], function(d3, $) {return function(gSelection, options) {
 
   function visualize(_width, _height) {
     if (!_width || !_height || !cells) {return;}
-    width  = _width  - (margin.left + margin.right );
-    height = _height - (margin.top  + margin.bottom);
-    x.rangeBands([margin.left, margin.left + width], xSpaceing);
-    y.rangeBands([margin.top  + height, margin.top], ySpaceing);
+
+    if (width != _width) {
+      width  = _width  - (margin.left + margin.right );
+      x.rangeBands([margin.left, margin.left + width], xSpaceing);
+    }
+
+    if (height != _height) {
+      height = _height - (margin.top  + margin.bottom);
+      y.rangeBands([margin.top  + height, margin.top], ySpaceing);
+    }
 
     var xBand = x.rangeBand();
     var yBand = y.rangeBand();
 
-    cellsEnter
-      .attr('x', function(d, i) {return x(indexToX(i));})
-      .attr('y', function(d, i) {return y(indexToY(i));})
-      .attr('width', function(d) {return xBand;})
-      .attr('height', 0);
+    // cellsEnter
+    //   .attr('x', function(d, i) {return x(indexToX(i));})
+    //   .attr('y', function(d, i) {return y(indexToY(i));})
+    //   .attr('width', function(d) {return xBand;})
+    //   .attr('height', 0);
 
     cells
-      .transition()
-      .duration(TRANSITION_DURATION)
+      // .transition()
+      // .duration(TRANSITION_DURATION)
       .attr('x', function(d, i) {return x(indexToX(i));})
       .attr('y', function(d, i) {return y(indexToY(i));})
       .attr('width', function(d) {return xBand;})
       .attr('height', function(d) {return yBand;})
       .attr('fill', colorFn);
 
-    if (xAxis) {
-      xAxis.scale().rangeBands([margin.left, margin.left + width], xSpaceing);
-      xAxisG
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('transform', 'translate(' + [xAxisCorrectX, margin.top + xAxisCorrectY] + ')')
-        .call(xAxis);
-    }
+    // if (xAxis) {
+    //   xAxis.scale().rangeBands([margin.left, margin.left + width], xSpaceing);
+    //   xAxisG
+    //     // .transition()
+    //     // .duration(TRANSITION_DURATION)
+    //     .attr('transform', 'translate(' + [xAxisCorrectX, margin.top + xAxisCorrectY] + ')')
+    //     .call(xAxis);
+    // }
 
-    if (yAxis) {
-      yAxis.scale().rangeBands([margin.top  + height, margin.top], ySpaceing);
+    // if (yAxis) {
+    //   yAxis.scale().rangeBands([margin.top  + height, margin.top], ySpaceing);
 
-      yAxisG
-        .transition()
-        .duration(TRANSITION_DURATION)
-        .attr('transform',
-              'translate(' + [margin.left + yAxisCorrectX, yAxisCorrectY] + ')')
-        .call(yAxis);
-    }
+    //   yAxisG
+    //     // .transition()
+    //     // .duration(TRANSITION_DURATION)
+    //     .attr('transform',
+    //           'translate(' + [margin.left + yAxisCorrectX, yAxisCorrectY] + ')')
+    //     .call(yAxis);
+    // }
   }
 
   function setTitleFormat(_titleFormat) {

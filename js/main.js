@@ -46,7 +46,6 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
     maxDate = new Date(model.maxDate().getTime() - MS_INA_DAY * 14);
 
     updateFrame();
-    setInterval(updateFrame, FRAME_DELAY);
 
     function updateFrame() {
       var currentDate = new Date(minDate.getTime() + frameCount * MS_INA_DAY);
@@ -55,6 +54,8 @@ define(['jquery', 'chart', 'model', 'popup', 'nunjucks', 'text!../js/templates/a
       if (currentDate.getTime() >= maxDate.getTime()) {
 		    frameCount = 0;
 	    }
+
+      setTimeout(updateFrame, FRAME_DELAY);
     }
   }
 
